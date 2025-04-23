@@ -5,10 +5,10 @@ public class Pet {
     private String nome;
     private String especie;
     private String raca;
-    private String status; // "disponível" ou "indisponível"
+    private StatusPetEnum status; // "disponível", "indisponível" ou "adotado"
     // adicionando comentário teste
 
-    public Pet(int id, String nome, String especie, String raca, String status) {
+    public Pet(int id, String nome, String especie, String raca, StatusPetEnum status) {
         this.id = id;
         this.nome = nome;
         this.especie = especie;
@@ -48,11 +48,11 @@ public class Pet {
         this.raca = raca;
     }
 
-    public String getStatus() {
+    public StatusPetEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusPetEnum status) {
         this.status = status;
     }
 }
