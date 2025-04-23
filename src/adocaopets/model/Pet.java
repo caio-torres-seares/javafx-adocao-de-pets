@@ -6,6 +6,7 @@ public class Pet {
     private String especie;
     private String raca;
     private String status; // "disponível" ou "indisponível"
+    // adicionando comentário teste
 
     public Pet(int id, String nome, String especie, String raca, String status) {
         this.id = id;
