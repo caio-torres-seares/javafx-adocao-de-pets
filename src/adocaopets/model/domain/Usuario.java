@@ -1,17 +1,17 @@
 package adocaopets.model.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
     private int id;
     private String nome;
-    private String senha;
-    private String cpf;
+    private List<Pet> petsAdotados = new ArrayList<>();
     private boolean voluntario;
 
-    public Usuario(int id, String nome, String senha, String cpf, String contato, boolean voluntario) {
+    public Usuario(int id, String nome, boolean voluntario) {
         this.id = id;
         this.nome = nome;
-        this.senha = senha;
-        this.cpf = cpf;
         this.voluntario = voluntario;
     }
 
@@ -31,20 +31,12 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public String getSenha() {
-        return senha;
+    public List<Pet> getPetsAdotados() {
+        return petsAdotados;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setPetsAdotados(List<Pet> petsAdotados) {
+        this.petsAdotados = petsAdotados;
     }
 
     public boolean isVoluntario() {

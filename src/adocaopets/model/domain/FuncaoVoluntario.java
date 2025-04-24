@@ -1,4 +1,4 @@
-package adocaopets.model;
+package adocaopets.model.domain;
 
 import java.util.ArrayList;
 import java.util.List;

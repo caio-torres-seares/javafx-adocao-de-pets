@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 
@@ -12,29 +13,30 @@
         <menus>
           <Menu mnemonicParsing="false" text="Cadastros">
             <items>
-              <MenuItem mnemonicParsing="false" text="Usuários" />
-                  <MenuItem mnemonicParsing="false" text="Pets" />
+              <MenuItem fx:id="menuItemCadastrosUsuarios" mnemonicParsing="false" text="Usuários" />
+                  <MenuItem fx:id="menuItemCadastrosPets" mnemonicParsing="false" text="Pets" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Processos">
             <items>
-              <MenuItem mnemonicParsing="false" text="Adoção" />
-                  <MenuItem mnemonicParsing="false" text="Voluntariado" />
+              <MenuItem fx:id="menuItemProcessosAdocao" mnemonicParsing="false" text="Adoção" />
+                  <MenuItem fx:id="menuItemProcessosVoluntariado" mnemonicParsing="false" text="Voluntariado" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Relatórios">
             <items>
-              <MenuItem mnemonicParsing="false" text="Pets" />
-                  <MenuItem mnemonicParsing="false" text="Voluntários" />
+              <MenuItem fx:id="menuItemRelatoriosPetsDisponiveisAdotados" mnemonicParsing="false" text="Pets" />
+                  <MenuItem fx:id="menuItemRelatoriosVoluntariosPorFuncao" mnemonicParsing="false" text="Voluntários" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Gráficos">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Pets adotados por mês" />
-                  <MenuItem mnemonicParsing="false" text="Voluntáriados por mês" />
+                  <MenuItem fx:id="menuItemGraficosAdocoesPorMes" mnemonicParsing="false" text="Adoções por mês" />
+                  <MenuItem fx:id="menuItemGraficosVoluntariosPorMes" mnemonicParsing="false" text="Voluntáriados por mês" />
                </items>
             </Menu>
         </menus>
       </MenuBar>
+      <AnchorPane fx:id="anchorPane" prefHeight="376.0" prefWidth="600.0" />
    </children>
 </VBox>

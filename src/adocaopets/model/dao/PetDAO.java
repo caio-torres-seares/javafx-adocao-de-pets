@@ -3,8 +3,8 @@ package adocaopets.model.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import adocaopets.model.Pet;
-import adocaopets.model.StatusPetEnum;
+import adocaopets.model.domain.Pet;
+import adocaopets.model.domain.StatusPetEnum;
 
 public class PetDAO {
 

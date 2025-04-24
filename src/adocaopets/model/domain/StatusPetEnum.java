@@ -1,4 +1,4 @@
-package adocaopets.model;
+package adocaopets.model.domain;
 
 public enum StatusPetEnum {
     DISPONIVEL,
