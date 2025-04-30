@@ -1,3 +1,5 @@
+// ALUNA: GABRIELA BENEVIDES PEREIRA MARQUES
+
 package adocaopets.model.domain;
 
 import java.util.ArrayList;
@@ -6,13 +8,16 @@ import java.util.List;
 public class Usuario {
     private int id;
     private String nome;
+    private String cpf;
     private List<Pet> petsAdotados = new ArrayList<>();
-    private boolean voluntario;
+    private boolean voluntario = false;
 
-    public Usuario(int id, String nome, boolean voluntario) {
+    public Usuario(){}
+    
+    public Usuario(int id, String nome, String cpf) {
         this.id = id;
         this.nome = nome;
-        this.voluntario = voluntario;
+        this.cpf = cpf;
     }
 
     public int getId() {
@@ -29,6 +34,14 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+    
+    public String getCpf() {
+        return cpf;
+    }
+    
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public List<Pet> getPetsAdotados() {

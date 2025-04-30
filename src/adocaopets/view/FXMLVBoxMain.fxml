@@ -6,14 +6,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adocaopets.controller.FXMLVBoxMainController">
    <children>
       <MenuBar>
         <menus>
           <Menu mnemonicParsing="false" text="Cadastros">
             <items>
-              <MenuItem fx:id="menuItemCadastrosUsuarios" mnemonicParsing="false" text="Usuários" />
+              <MenuItem fx:id="menuItemCadastrosUsuarios" mnemonicParsing="false" onAction="#handleMenuItemCadastrosUsuarios" text="Usuários" />
                   <MenuItem fx:id="menuItemCadastrosPets" mnemonicParsing="false" text="Pets" />
             </items>
           </Menu>
