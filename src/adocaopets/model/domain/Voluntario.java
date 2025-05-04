@@ -1,3 +1,4 @@
+// ALUNA: GABRIELA BENEVIDES PEREIRA MARQUES
 package adocaopets.model.domain;
 
 import java.time.LocalDate;
@@ -5,13 +6,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Voluntario {
+    private int id;
     private Usuario usuario;
+    private LocalDate dataCadastro;
+    private boolean ativo;
     private List<FuncaoVoluntario> funcoes = new ArrayList<>();
-    private LocalDate data;
+    
+    
+    public Voluntario() {}
 
-    public Voluntario(Usuario usuario, LocalDate data) {
+    public Voluntario(Usuario usuario) {
         this.usuario = usuario;
-        this.data = data;
+        this.dataCadastro = LocalDate.now();
+        this.ativo = true;
+    }
+
+    public Voluntario(Usuario usuario, FuncaoVoluntario funcao) {
+        this.usuario = usuario;
+        this.dataCadastro = LocalDate.now();
+        this.funcoes.add(funcao);
+        this.ativo = true;
+    }
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Usuario getUsuario() {
@@ -30,12 +52,20 @@ public class Voluntario {
         this.funcoes = funcoes;
     }
 
-    public LocalDate getData() {
-        return data;
+    public LocalDate getDataCadastro() {
+        return dataCadastro;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setDataCadastro(LocalDate data) {
+        this.dataCadastro = data;
+    }
+
+    public boolean isAtivo() {
+        return ativo == true;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
 
