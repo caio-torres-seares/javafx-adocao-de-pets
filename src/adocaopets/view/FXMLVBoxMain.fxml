@@ -13,7 +13,7 @@
           <Menu mnemonicParsing="false" text="Cadastros">
             <items>
               <MenuItem fx:id="menuItemCadastrosUsuarios" mnemonicParsing="false" onAction="#handleMenuItemCadastrosUsuarios" text="Usuários" />
-                  <MenuItem fx:id="menuItemCadastrosPets" mnemonicParsing="false" text="Pets" />
+                  <MenuItem fx:id="menuItemCadastrosPets" mnemonicParsing="false" onAction="#handleMenuItemCadastrosPets" text="Pets" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Processos">
@@ -36,6 +36,6 @@
             </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane fx:id="anchorPane" prefHeight="376.0" prefWidth="600.0" />
+      <AnchorPane fx:id="anchorPane" prefHeight="510.0" prefWidth="780.0" />
    </children>
 </VBox>

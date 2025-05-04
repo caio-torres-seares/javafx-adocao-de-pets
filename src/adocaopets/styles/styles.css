@@ -1,0 +1,23 @@
+.table-view {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #bbdefb;
+}
+
+.button {
+    -fx-padding: 8 15;
+    -fx-background-radius: 4;
+}
+
+.text-field, .combo-box, .spinner {
+    -fx-background-radius: 4;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+}
