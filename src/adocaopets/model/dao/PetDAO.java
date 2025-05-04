@@ -27,7 +27,7 @@ public class PetDAO {
             stmt.setString(2, pet.getEspecie());
             stmt.setString(3, pet.getRaca());
             stmt.setInt(4, pet.getIdade());
-            stmt.setString(5, pet.getSexo().name());
+            stmt.setString(5, pet.getSexo().getValorBanco());
             stmt.setString(6, pet.getStatus().name()); 
             stmt.execute();
             
@@ -50,7 +50,7 @@ public class PetDAO {
             stmt.setString(2, pet.getEspecie());
             stmt.setString(3, pet.getRaca());
             stmt.setInt(4, pet.getIdade());
-            stmt.setString(5, pet.getSexo().name());
+            stmt.setString(5, pet.getSexo().getValorBanco());
             stmt.setString(6, pet.getStatus().name());
             stmt.setInt(7, pet.getId());
             stmt.execute();
@@ -88,7 +88,7 @@ public class PetDAO {
                 pet.setEspecie(resultado.getString("especie"));
                 pet.setRaca(resultado.getString("raca"));
                 pet.setIdade(resultado.getInt("idade"));
-                pet.setSexo(SexoPetEnum.valueOf(resultado.getString("sexo")));
+                pet.setSexo(SexoPetEnum.fromValorBanco(resultado.getString("sexo")));
                 pet.setStatus(StatusPetEnum.valueOf(resultado.getString("status")));
 
                 retorno = pet;
@@ -114,7 +114,7 @@ public class PetDAO {
                 pet.setEspecie(resultado.getString("especie"));
                 pet.setRaca(resultado.getString("raca"));
                 pet.setIdade(resultado.getInt("idade"));
-                pet.setSexo(SexoPetEnum.valueOf(resultado.getString("sexo")));
+                pet.setSexo(SexoPetEnum.fromValorBanco(resultado.getString("sexo")));
                 pet.setStatus(StatusPetEnum.valueOf(resultado.getString("status")));
 
                 retorno.add(pet);

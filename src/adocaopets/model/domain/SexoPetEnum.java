@@ -3,25 +3,31 @@
 package adocaopets.model.domain;
 
 public enum SexoPetEnum {
-    MASCULINO('M'),
-    FEMININO('F');
-    
-    private final char valor;
-    
-    SexoPetEnum(char valor) {
-        this.valor = valor;
+    MASCULINO("M", "Masculino"),
+    FEMININO("F", "Feminino");
+
+    private final String valorBanco;
+    private final String exibicao;
+
+    SexoPetEnum(String valorBanco, String exibicao) {
+        this.valorBanco = valorBanco;
+        this.exibicao = exibicao;
     }
-    
-    public char getValor() {
-        return valor;
+
+    public String getValorBanco() {
+        return valorBanco;
     }
-    
-    public static SexoPetEnum fromChar(char c) {
+
+    public String getExibicao() {
+        return exibicao;
+    }
+
+    public static SexoPetEnum fromValorBanco(String valorBanco) {
         for (SexoPetEnum sexo : values()) {
-            if (sexo.valor == c) {
+            if (sexo.valorBanco.equalsIgnoreCase(valorBanco)) {
                 return sexo;
             }
         }
-        throw new IllegalArgumentException("Sexo inválido: " + c);
+        throw new IllegalArgumentException("Valor inválido para SexoPetEnum: " + valorBanco);
     }
 }
