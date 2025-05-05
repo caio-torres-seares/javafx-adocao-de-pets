@@ -95,7 +95,7 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
         comboBoxEspecie.getItems().addAll("Cachorro", "Gato", "Pássaro", "Outro");
         
         // Configurar spinner de idade
-        spinnerIdade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 30, 1));
+        spinnerIdade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99, 1));
         
         // Configurar grupo de radio buttons
         toggleGroupSexo = new ToggleGroup();
