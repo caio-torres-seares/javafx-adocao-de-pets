@@ -8,36 +8,36 @@ import adocaopets.model.database.DatabaseFactory;
 import adocaopets.model.domain.Usuario;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-// Add imports for logging
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-/**
- * FXML Controller class
- *
- * @author Gabriela
- */
 public class FXMLAnchorPaneCadastrosUsuariosController implements Initializable {
     
+    // Componentes da tabela
     @FXML
     private TableView<Usuario> tableViewUsuarios;
     @FXML
     private TableColumn<Usuario, String> tableColumnUsuarioNome;
     @FXML
     private TableColumn<Usuario, String> tableColumnUsuarioCPF;
+    
+    // Botões
     @FXML
     private Button buttonInserir;
     @FXML
@@ -45,16 +45,26 @@ public class FXMLAnchorPaneCadastrosUsuariosController implements Initializable 
     @FXML
     private Button buttonRemover;
     @FXML
-    private Label labelUsuarioId;   
+    private Button buttonCancelar;
     @FXML
-    private Label labelUsuarioNome;
+    private Button buttonSalvar;
+    
+    // Campos do formulário
     @FXML
-    private Label labelUsuarioCPF;
+    private Label labelUsuarioId;
     @FXML
-    private Label labelUsuarioPetsAdotados;
+    private TextField textFieldUsuarioNome;
     @FXML
-    private Label labelUsuarioVoluntario;
-
+    private TextField textFieldUsuarioCPF;
+    @FXML
+    private ComboBox<String> comboBoxUsuarioTipo;
+    @FXML
+    private RadioButton radioUsuarioVoluntarioSim;
+    @FXML
+    private RadioButton radioUsuarioVoluntarioNao;
+    
+    private ToggleGroup toggleGroupVoluntario;
+    
     private List<Usuario> listUsuarios;
     private ObservableList<Usuario> observableListUsuarios;
 
@@ -64,50 +74,59 @@ public class FXMLAnchorPaneCadastrosUsuariosController implements Initializable 
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        usuarioDAO.setConnection (connection);
-        
-        carregarTableViewUsuarios();
-
-        // Limpando a exibição dos detalhes do Usuario
-        selecionarItemTableViewUsuarios(null);
-
-        // Listen acionado diante de quaisquer alterações na seleção de itens do TableView
-        tableViewUsuarios.getSelectionModel().selectedItemProperty().addListener(
+        try {
+            usuarioDAO.setConnection(connection);
+            
+            // Configurar ToggleGroup para os RadioButtons
+            toggleGroupVoluntario = new ToggleGroup();
+            radioUsuarioVoluntarioSim.setToggleGroup(toggleGroupVoluntario);
+            radioUsuarioVoluntarioNao.setToggleGroup(toggleGroupVoluntario);
+            
+            // Carregar dados
+            carregarTableViewUsuarios();
+            
+            // Configurar listener para seleção na tabela
+            tableViewUsuarios.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> selecionarItemTableViewUsuarios(newValue));
+            
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLAnchorPaneCadastrosUsuariosController.class.getName())
+                .log(Level.SEVERE, "Erro ao inicializar", ex);
+        }
     }
 
     public void carregarTableViewUsuarios() {
-        tableColumnUsuarioNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        tableColumnUsuarioCPF.setCellValueFactory(new PropertyValueFactory<>("cpf"));
-
         try {
-            listUsuarios = usuarioDAO.listar();
-            // Log the number of users fetched
-            System.out.println("Number of users fetched: " + (listUsuarios != null ? listUsuarios.size() : "null list"));
-        } catch (SQLException ex) {
-            // Log the exception if fetching fails
-            Logger.getLogger(FXMLAnchorPaneCadastrosUsuariosController.class.getName()).log(Level.SEVERE, "Error fetching users from database", ex);
-            // Optionally, show an alert to the user
-            listUsuarios = FXCollections.observableArrayList(); // Initialize with empty list on error
-        }
+            tableColumnUsuarioNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+            tableColumnUsuarioCPF.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 
-        observableListUsuarios = FXCollections.observableArrayList(listUsuarios);
-        tableViewUsuarios.setItems(observableListUsuarios);
+            listUsuarios = usuarioDAO.listar();
+            observableListUsuarios = FXCollections.observableArrayList(listUsuarios);
+            tableViewUsuarios.setItems(observableListUsuarios);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLAnchorPaneCadastrosUsuariosController.class.getName())
+                .log(Level.SEVERE, "Erro ao carregar usuários", ex);
+        }
     }
 
     public void selecionarItemTableViewUsuarios(Usuario usuario) {
         if (usuario != null) {
             labelUsuarioId.setText(String.valueOf(usuario.getId()));
-            labelUsuarioNome.setText(usuario.getNome());
-            labelUsuarioCPF.setText(usuario.getCpf());
-            boolean res = usuario.isVoluntario();
-            labelUsuarioVoluntario.setText(res ? "Sim" : "Não");
+            textFieldUsuarioNome.setText(usuario.getNome());
+            textFieldUsuarioCPF.setText(usuario.getCpf());
+            
+            // Configurar RadioButton
+            if (usuario.isVoluntario()) {
+                toggleGroupVoluntario.selectToggle(radioUsuarioVoluntarioSim);
+            } else {
+                toggleGroupVoluntario.selectToggle(radioUsuarioVoluntarioNao);
+            }
         } else {
             labelUsuarioId.setText("");
-            labelUsuarioNome.setText("");
-            labelUsuarioCPF.setText("");
-            labelUsuarioVoluntario.setText("");
+            textFieldUsuarioNome.clear();
+            textFieldUsuarioCPF.clear();
+            toggleGroupVoluntario.selectToggle(null);
         }
-    }    
-    
+    }
 }
