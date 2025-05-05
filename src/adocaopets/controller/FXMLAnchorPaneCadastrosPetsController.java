@@ -6,6 +6,8 @@
 package adocaopets.controller;
 
 import adocaopets.model.dao.PetDAO;
+import adocaopets.model.database.Database;
+import adocaopets.model.database.DatabaseFactory;
 import adocaopets.model.domain.Pet;
 import adocaopets.model.domain.SexoPetEnum;
 import adocaopets.model.domain.StatusPetEnum;
@@ -72,49 +74,40 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
     @FXML
     private Button buttonCancelar;
     
-    private PetDAO petDAO;
     private ObservableList<Pet> listaPets;
     private Pet petSelecionado;
     private ToggleGroup toggleGroupSexo;
 
-    /**
-     * Initializes the controller class.
-     */
+    private final Database database = DatabaseFactory.getDatabase("postgresql");
+    private final Connection connection = database.conectar();
+    private final PetDAO petDAO = new PetDAO();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            // Configurar conexão com o banco
-            Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/adocao_pets",
-                "postgres",
-                "postgres"
-            );
-            petDAO = new PetDAO(connection);
-            
-            // Configurar lista de pets
-            listaPets = FXCollections.observableArrayList();
-            tableViewPets.setItems(listaPets);
-            
-            // Configurar combo box de espécies
-            comboBoxEspecie.getItems().addAll("Cachorro", "Gato", "Pássaro", "Outro");
-            
-            // Configurar spinner de idade
-            spinnerIdade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 30, 1));
-            
-            // Configurar grupo de radio buttons
-            toggleGroupSexo = new ToggleGroup();
-            radioMacho.setToggleGroup(toggleGroupSexo);
-            radioFemea.setToggleGroup(toggleGroupSexo);
-            
-            // Carregar dados iniciais
-            carregarDados();
-            
-            // Configurar listeners
-            configurarListeners();
-            
-        } catch (SQLException ex) {
-            mostrarAlerta("Erro", "Erro ao conectar com o banco de dados", ex.getMessage());
-        }
+        
+        petDAO.setConnection(connection);
+        
+        // Configurar lista de pets
+        listaPets = FXCollections.observableArrayList();
+        tableViewPets.setItems(listaPets);
+        
+        // Configurar combo box de espécies
+        comboBoxEspecie.getItems().addAll("Cachorro", "Gato", "Pássaro", "Outro");
+        
+        // Configurar spinner de idade
+        spinnerIdade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 30, 1));
+        
+        // Configurar grupo de radio buttons
+        toggleGroupSexo = new ToggleGroup();
+        radioMacho.setToggleGroup(toggleGroupSexo);
+        radioFemea.setToggleGroup(toggleGroupSexo);
+        
+        // Carregar dados iniciais
+        carregarDados();
+        
+        // Configurar listeners
+        configurarListeners();
+        
     }
     
     private void carregarDados() {
