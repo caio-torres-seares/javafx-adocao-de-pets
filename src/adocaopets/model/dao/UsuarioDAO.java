@@ -50,8 +50,8 @@ public class UsuarioDAO {
             stmt.executeUpdate();
         }
     }
-
-        public Usuario buscar(Usuario usuario) {
+    
+    public Usuario buscar(Usuario usuario) {
         String sql = "SELECT * FROM usuarios WHERE id=?";
         Usuario retorno = new Usuario();
         try {
@@ -70,18 +70,22 @@ public class UsuarioDAO {
         return retorno;
     }
     
-      public List<Usuario> listar() throws SQLException {
+    public List<Usuario> listar() {
         String sql = "SELECT * FROM usuarios";
         List<Usuario> retorno = new ArrayList<>();
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        ResultSet resultado = stmt.executeQuery();
-        while (resultado.next()) {
-            Usuario usuario = new Usuario();
-            usuario.setId(resultado.getInt("id"));
-            usuario.setNome(resultado.getString("nome"));
-            usuario.setCpf(resultado.getString("cpf"));
-            usuario.setVoluntario(resultado.getBoolean("voluntario"));
-            retorno.add(usuario);
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultado = stmt.executeQuery();
+            while (resultado.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setId(resultado.getInt("id"));
+                usuario.setNome(resultado.getString("nome"));
+                usuario.setCpf(resultado.getString("cpf"));
+                usuario.setVoluntario(resultado.getBoolean("voluntario"));
+                retorno.add(usuario);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return retorno;
     }

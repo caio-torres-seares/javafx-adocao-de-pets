@@ -96,18 +96,12 @@ public class FXMLAnchorPaneCadastrosUsuariosController implements Initializable 
     }
 
     public void carregarTableViewUsuarios() {
-        try {
-            tableColumnUsuarioNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-            tableColumnUsuarioCPF.setCellValueFactory(new PropertyValueFactory<>("cpf"));
+        tableColumnUsuarioNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        tableColumnUsuarioCPF.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 
-            listUsuarios = usuarioDAO.listar();
-            observableListUsuarios = FXCollections.observableArrayList(listUsuarios);
-            tableViewUsuarios.setItems(observableListUsuarios);
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLAnchorPaneCadastrosUsuariosController.class.getName())
-                .log(Level.SEVERE, "Erro ao carregar usuários", ex);
-        }
+        listUsuarios = usuarioDAO.listar();
+        observableListUsuarios = FXCollections.observableArrayList(listUsuarios);
+        tableViewUsuarios.setItems(observableListUsuarios);
     }
 
     public void selecionarItemTableViewUsuarios(Usuario usuario) {
