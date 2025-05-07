@@ -57,7 +57,7 @@
         
         <!-- Painel direito - Detalhes do Pet -->
         <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Detalhes do Pet" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Informações do Pet" />
             
             <Separator style="-fx-padding: 0 0 10 0;" />
             
