@@ -10,7 +10,7 @@ public class Pet implements Serializable{
     private String especie;
     private String raca;
     private int idade;
-    private SexoPetEnum sexo;
+    private SexoPetEnum sexo;     // "Masculino", "Feminino"
     private StatusPetEnum status; // "disponível", "indisponível" ou "adotado"
     
     public Pet(){
@@ -89,6 +89,9 @@ public class Pet implements Serializable{
     public void setStatus(StatusPetEnum status) {
         this.status = status;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return this.nome; 
+    }
 }
