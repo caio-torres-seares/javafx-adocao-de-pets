@@ -14,7 +14,7 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="780.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adocaopets.controller.FXMLAnchorPaneCadastrosAdocoesController">
 
-    <SplitPane dividerPositions="0.4318766066838046" orientation="HORIZONTAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane dividerPositions="0.4717223650385604" orientation="HORIZONTAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         
         <!-- Painel esquerdo - Lista de Adoções -->
         <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: white;">
@@ -22,17 +22,22 @@
             
             <TableView fx:id="tableViewAdocoes" prefHeight="400.0" prefWidth="314.0" style="-fx-background-color: transparent;">
                 <columns>
-                    <TableColumn fx:id="columnUsuario" prefWidth="100.0" text="Usuário">
+               <TableColumn fx:id="tableColumnAdocaoId" prefWidth="46.0" text="Cód">
+                  <cellValueFactory>
+                     <PropertyValueFactory property="nomeUsuario" />
+                  </cellValueFactory>
+               </TableColumn>
+                    <TableColumn fx:id="tableColumnAdocaoUsuario" prefWidth="102.0" text="Usuário">
                         <cellValueFactory>
                             <PropertyValueFactory property="nomeUsuario" />
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="columnPet" prefWidth="100.0" text="Pet">
+                    <TableColumn fx:id="tableColumnAdocaoPet" prefWidth="84.0" text="Pet">
                         <cellValueFactory>
                             <PropertyValueFactory property="nomePet" />
                         </cellValueFactory>
                     </TableColumn>
-                    <TableColumn fx:id="columnData" prefWidth="102.0" text="Data">
+                    <TableColumn fx:id="tableColumnAdocaoData" prefWidth="101.0" text="Data">
                         <cellValueFactory>
                             <PropertyValueFactory property="data" />
                         </cellValueFactory>
@@ -48,7 +53,7 @@
 
         <!-- Painel direito - Formulário de Adoção -->
         <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Detalhes da Adoção" />
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Informações da Adoção" />
 
             <!-- ComboBox de Usuários -->
             <HBox alignment="CENTER_LEFT" spacing="10">
