@@ -7,6 +7,8 @@ public class Adocao {
     private Usuario usuario;
     private Pet pet;
     private LocalDate data;
+    
+    public Adocao (){}
 
     public Adocao(int id, Usuario usuario, Pet pet, LocalDate data) {
         this.id = id;
