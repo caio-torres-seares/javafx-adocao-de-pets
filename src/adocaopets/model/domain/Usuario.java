@@ -10,7 +10,7 @@ public class Usuario {
     private String nome;
     private String cpf;
     private List<Pet> petsAdotados = new ArrayList<>();
-    private boolean voluntario = false;
+    private boolean voluntario;
 
     public Usuario(){}
     

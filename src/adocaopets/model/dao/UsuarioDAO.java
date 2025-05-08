@@ -1,5 +1,4 @@
 // ALUNA: GABRIELA BENEVIDES PEREIRA MARQUES
-
 package adocaopets.model.dao;
 
 import adocaopets.model.domain.Usuario;
@@ -14,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UsuarioDAO {
+
     private Connection connection;
 
     public Connection getConnection() {
@@ -24,33 +24,48 @@ public class UsuarioDAO {
         this.connection = connection;
     }
 
-    public void inserir(Usuario usuario) throws SQLException {
+    public boolean inserir(Usuario usuario)  {
         String sql = "INSERT INTO usuarios (nome, cpf) VALUES (?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getCpf());
-            stmt.executeUpdate();
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
-    
-    public void atualizar(Usuario usuario) throws SQLException {
+
+    public boolean alterar(Usuario usuario) throws SQLException{
         String sql = "UPDATE usuarios SET nome = ?, cpf = ? WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getCpf());
             stmt.setInt(3, usuario.getId());
-            stmt.executeUpdate();
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
-        
-    public void deletar(int id) throws SQLException {
+
+    public boolean remover(Usuario usuario) throws SQLException{
         String sql = "DELETE FROM usuarios WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, usuario.getId());
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
-    
+
     public Usuario buscar(Usuario usuario) {
         String sql = "SELECT * FROM usuarios WHERE id=?";
         Usuario retorno = new Usuario();
@@ -59,6 +74,7 @@ public class UsuarioDAO {
             stmt.setInt(1, usuario.getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
+                usuario.setId(resultado.getInt("id"));
                 usuario.setNome(resultado.getString("nome"));
                 usuario.setCpf(resultado.getString("cpf"));
                 usuario.setVoluntario(resultado.getBoolean("voluntario"));
@@ -69,7 +85,7 @@ public class UsuarioDAO {
         }
         return retorno;
     }
-    
+
     public List<Usuario> listar() {
         String sql = "SELECT * FROM usuarios";
         List<Usuario> retorno = new ArrayList<>();
@@ -89,11 +105,4 @@ public class UsuarioDAO {
         }
         return retorno;
     }
-
-//    private Usuario criarUsuarioDoResultSet(ResultSet rs) throws SQLException {;
-//        int id = rs.getInt("id");
-//        String nome = rs.getString("nome");
-//        String cpf = rs.getString("cpf");
-//        return new Usuario(id, nome, cpf);
-//    }
 }
