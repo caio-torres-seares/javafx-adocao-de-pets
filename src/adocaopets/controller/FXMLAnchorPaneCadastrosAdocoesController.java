@@ -9,6 +9,7 @@ import adocaopets.model.database.DatabaseFactory;
 import adocaopets.model.domain.Adocao;
 import adocaopets.model.domain.Pet;
 import adocaopets.model.domain.SexoPetEnum;
+import adocaopets.model.domain.StatusPetEnum;
 import adocaopets.model.domain.Usuario;
 import java.net.URL;
 import java.sql.Connection;
@@ -71,9 +72,9 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     
     private List<Usuario> listUsuarios;
     private List<Pet> listPets;
+    private List<Adocao> listAdocoes;
     private ObservableList<Usuario> observableListUsuarios;
     private ObservableList<Pet> observableListPets;
-    
     private ObservableList<Adocao> observableListAdocoes;
     
     //Atributos para manipulação de Banco de Dados
@@ -91,19 +92,27 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         usuarioDAO.setConnection(connection);
         petDAO.setConnection(connection);
+        adocaoDAO.setConnection(connection);
+        
         carregarComboBoxUsuarios();
         carregarTableViewPets();
+        carregarTableViewAdocoes();
         
-        observableListAdocoes = FXCollections.observableArrayList();
-        tableViewAdocoes.setItems(observableListAdocoes);
+        
         
         configurarListeners();
-        /*tableColumnAdocaoId.setCellValueFactory(new PropertyValueFactory<>("id"));
+    }    
+    
+    private void carregarTableViewAdocoes(){
+        tableColumnAdocaoId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableColumnAdocaoUsuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
         tableColumnAdocaoPet.setCellValueFactory(new PropertyValueFactory<>("pet"));
         tableColumnAdocaoData.setCellValueFactory(new PropertyValueFactory<>("data"));
-        */
-    }    
+        listAdocoes = adocaoDAO.listar();
+        observableListAdocoes = FXCollections.observableArrayList(listAdocoes);
+        tableViewAdocoes.setItems(observableListAdocoes);
+
+    }
     
     
     private void configurarListeners() {
@@ -156,6 +165,9 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
                     // Inserir nova Adoção
                     if (adocaoDAO.inserir(adocao)) {
                         observableListAdocoes.add(adocao);
+                        if (marcarPetAdotado(adocao.getPet())){
+                            mostrarAlerta("Erro", "Não foi possível marcar o pet como adotado", null);
+                        }
                         limparCampos();
                         mostrarAlerta("Sucesso", "Adoção cadastrada com sucesso", null);
                     } else {
@@ -188,14 +200,44 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     }
     
     private void preencherCampos(Adocao adocao) {
-        comboBoxUsuarios.getSelectionModel().select(adocao.getUsuario());;
-        tableViewPets.getSelectionModel().select(adocao.getPet());
+        if (adocao == null) {
+            return;
+        }
+
+        // Selecionar o usuário no ComboBox
+        comboBoxUsuarios.getSelectionModel().select(adocao.getUsuario());
+
+        // Selecionar o pet na TableView
+        if (adocao.getPet() != null) {
+            // Encontrar o índice do pet na observableListPets
+            int index = -1;
+            for (int i = 0; i < observableListPets.size(); i++) {
+                if (observableListPets.get(i).getId() == adocao.getPet().getId()) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index >= 0) {
+                // Selecionar o item e rolar até ele
+                tableViewPets.getSelectionModel().select(index);
+                tableViewPets.scrollTo(index);
+            }
+        }
+
     }
+
     
     private void limparCampos() {
-        comboBoxUsuarios.getSelectionModel().clearSelection(); // Limpa seleção do ComboBox
-        tableViewPets.getSelectionModel().clearSelection();    
+        // Reinicia o ComboBox
+        comboBoxUsuarios.setItems(FXCollections.observableArrayList(listUsuarios));
+        comboBoxUsuarios.setValue(null);
+
+        // Reinicia a TableView
+        observableListPets = FXCollections.observableArrayList(listPets);
+        tableViewPets.setItems(observableListPets);
     }
+
 
     private void carregarComboBoxUsuarios(){
         listUsuarios = usuarioDAO.listar();
@@ -204,10 +246,6 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     }
     
     private void carregarTableViewPets(){
-        tableColumnAdocaoId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tableColumnAdocaoUsuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
-        tableColumnAdocaoPet.setCellValueFactory(new PropertyValueFactory<>("pet"));
-        tableColumnAdocaoData.setCellValueFactory(new PropertyValueFactory<>("data"));
         listPets = petDAO.listarTodos();
         observableListPets = FXCollections.observableArrayList(listPets);
         tableViewPets.setItems(observableListPets);
@@ -235,6 +273,11 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
         alert.setHeaderText(cabecalho);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    private boolean marcarPetAdotado(Pet pet) throws SQLException {
+        pet.setStatus(StatusPetEnum.ADOTADO);
+        return petDAO.alterar(pet);
     }
 
 }
