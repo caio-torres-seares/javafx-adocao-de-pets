@@ -161,11 +161,14 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
         buttonSalvar.setOnAction(event -> {
             try {
                 Adocao adocao = criarAdocao();
+                if (adocao == null) {
+                    return;
+                }
                 if (adocaoSelecionada == null) {
                     // Inserir nova Adoção
                     if (adocaoDAO.inserir(adocao)) {
                         observableListAdocoes.add(adocao);
-                        if (marcarPetAdotado(adocao.getPet())){
+                        if (!marcarPetAdotado(adocao.getPet())){
                             mostrarAlerta("Erro", "Não foi possível marcar o pet como adotado", null);
                         }
                         limparCampos();
@@ -246,7 +249,7 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     }
     
     private void carregarTableViewPets(){
-        listPets = petDAO.listarTodos();
+        listPets = petDAO.listarPetsParaAdocao();
         observableListPets = FXCollections.observableArrayList(listPets);
         tableViewPets.setItems(observableListPets);
     }
