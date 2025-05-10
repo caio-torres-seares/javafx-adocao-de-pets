@@ -10,7 +10,6 @@ import adocaopets.model.domain.Adocao;
 import adocaopets.model.domain.Pet;
 import adocaopets.model.domain.StatusPetEnum;
 import adocaopets.model.domain.Usuario;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,24 +21,15 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author 20231si012
- */
 public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
 
     @FXML
@@ -53,44 +43,55 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     @FXML
     private TableColumn<Adocao, LocalDate> tableColumnAdocaoData;
     @FXML
-    private Button buttonInserir;
+    private Button buttonNovaAdocao;
     @FXML
-    private Button buttonAlterar;
+    private Button buttonRemoverAdocao;
     @FXML
-    private Button buttonRemover;
+    private Button buttonCancelar;
     @FXML
-    private Label labelAdocaoId;
+    private Button buttonSalvar;
     @FXML
-    private Label labelAdocaoData;
+    private Button buttonRemoverPetTableView;
     @FXML
-    private Label labelAdocaoUsuario;
+    private Button buttonAdicionarPetTableView;
     @FXML
-    private Label labelAdocaoPet;
+    private ComboBox<Usuario> comboBoxUsuarios;
+    @FXML
+    private TableView<Pet> tableViewPets;
+    @FXML
+    private TableColumn<Pet, String> columnNome;
+    @FXML
+    private TableColumn<Pet, String> columnEspecie;
+    @FXML
+    private TableColumn<Pet, String> columnRaca;
 
     private List<Adocao> listAdocoes;
     private ObservableList<Adocao> observableListAdocoes;
+    private List<Pet> listPets;
+    private ObservableList<Pet> observableListPets;
+    private List<Usuario> listUsuarios;
+    private ObservableList<Usuario> observableListUsuarios;
 
+    //Atributos para manipulação de Banco de Dados
     private final Database database = DatabaseFactory.getDatabase("postgresql");
     private final Connection connection = database.conectar();
+    private final AdocaoDAO adocaoDAO = new AdocaoDAO();
     private final PetDAO petDAO = new PetDAO();
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private final AdocaoDAO adocaoDAO = new AdocaoDAO();
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        usuarioDAO.setConnection(connection);
-        petDAO.setConnection(connection);
         adocaoDAO.setConnection(connection);
+        petDAO.setConnection(connection);
+        usuarioDAO.setConnection(connection);
 
         carregarTableViewAdocoes();
-
-        // Limpando a exibição dos detalhes da adoção
+        carregarTableViewPets();
+        carregarComboBoxUsuarios();
+        
         selecionarItemTableViewAdocoes(null);
 
-        // Listen acionado diante de quaisquer alterações na seleção de itens do TableView
+        // Listeners
         tableViewAdocoes.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> selecionarItemTableViewAdocoes(newValue));
     }
@@ -106,140 +107,164 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
         tableViewAdocoes.setItems(observableListAdocoes);
     }
 
+    public void carregarTableViewPets() {
+        columnNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        columnEspecie.setCellValueFactory(new PropertyValueFactory<>("especie"));
+        columnRaca.setCellValueFactory(new PropertyValueFactory<>("raca"));
+
+        listPets = petDAO.listarDisponiveis();
+        observableListPets = FXCollections.observableArrayList(listPets);
+        tableViewPets.setItems(observableListPets);
+    }
+
+    public void carregarComboBoxUsuarios() {
+        listUsuarios = usuarioDAO.listar();
+        observableListUsuarios = FXCollections.observableArrayList(listUsuarios);
+        comboBoxUsuarios.setItems(observableListUsuarios);
+    }
+
     public void selecionarItemTableViewAdocoes(Adocao adocao) {
         if (adocao != null) {
-            labelAdocaoId.setText(String.valueOf(adocao.getId()));
-            labelAdocaoData.setText(String.valueOf(adocao.getData()));
-            labelAdocaoUsuario.setText(adocao.getUsuario().toString());
-            labelAdocaoPet.setText(adocao.getPet().toString());
+            comboBoxUsuarios.getSelectionModel().select(adocao.getUsuario());
+            
+            // Buscando pet no dao para ter certeza que está vindo certo
+            Pet pet = petDAO.buscar(adocao.getPet());
+            
+            // Define a TableView apenas com o pet da adoção
+            ObservableList<Pet> petAdocao = FXCollections.observableArrayList(pet);
+            tableViewPets.setItems(petAdocao);
+            
+            buttonRemoverPetTableView.setDisable(false);
+            
+            //labelAdocaoData.setText(adocao.getData().toString());
         } else {
-            labelAdocaoId.setText("");
-            labelAdocaoData.setText("");
-            labelAdocaoUsuario.setText("");
-            labelAdocaoPet.setText("");
+            limparLabels();
         }
+    }
+    
+    public void handleButtonRemoverPetTableView(){
+        
+        // Habilita o botão de adição e remove o de remoção
+        buttonAdicionarPetTableView.setDisable(false);
+        buttonRemoverPetTableView.setDisable(true);
+    }
+
+    private void limparLabels() {
+        // Restaura os dados completos
+        comboBoxUsuarios.getSelectionModel().clearSelection();
+        comboBoxUsuarios.setValue(null);
+
+        tableViewPets.getSelectionModel().clearSelection();
+        tableViewPets.setItems(observableListPets);
     }
 
     @FXML
-    public void handleButtonInserir() throws IOException {
-        Adocao adocao = new Adocao();
-        adocao.setData(LocalDate.now());
-        boolean buttonConfirmarClicked = showFXMLAnchorPaneCadastrosAdocoesDialog(adocao);
-        if (buttonConfirmarClicked) {
-            try {
-                connection.setAutoCommit(false);
-                if (adocaoDAO.inserir(adocao)) {
-                    if (!marcarPetAdotado(adocao.getPet())) {
-                        connection.rollback();
-                        mostrarAlerta("Erro", "Não foi possível marcar o pet como adotado", null);
-                        return;
-                    }
-                    connection.commit();
-                    carregarTableViewAdocoes();
-                } else {
-                    connection.rollback();
-                    mostrarAlerta("Erro", "Erro ao cadastrar Adoção", null);
-                }
-            } catch (SQLException ex) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex1) {
-                    Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-                Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName()).log(Level.SEVERE, null, ex);
+    public void handleButtonSalvar() {
+        try {
+            connection.setAutoCommit(false);
+
+            Usuario usuario = comboBoxUsuarios.getSelectionModel().getSelectedItem();
+            Pet pet = tableViewPets.getSelectionModel().getSelectedItem();
+
+            if (validarCampos(usuario, pet)) {
+                Adocao novaAdocao = new Adocao();
+                novaAdocao.setUsuario(usuario);
+                novaAdocao.setPet(pet);
+                novaAdocao.setData(LocalDate.now());
+
+                adocaoDAO.inserir(novaAdocao);
+                atualizarStatusPet(pet, StatusPetEnum.ADOTADO);
+
+                connection.commit();
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Adoção Salva!", null, "A adoção foi salva com sucesso!");
+                atualizarTabelas();
+                limparCampos();
             }
+        } catch (SQLException ex) {
+            rollbackTransacao(ex);
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro ao Salvar", "Ocorreu um erro ao salvar adoção!", "Não foi possível salvar a adoção.");
         }
+    }
+    
+    @FXML
+    public void handleButtonLimparSelecao(){
+        limparLabels();
+        tableViewAdocoes.getSelectionModel().clearSelection();
+        buttonAdicionarPetTableView.setDisable(true);
+        buttonRemoverPetTableView.setDisable(true);
+        // Senti que esse método e o handleButtonCancelar ficaram iguais, mas 
     }
 
     @FXML
-    public void handleButtonAlterar() throws IOException {
-        Adocao adocao = tableViewAdocoes.getSelectionModel().getSelectedItem();
-        if (adocao != null) {
-            boolean buttonConfirmarClicked = showFXMLAnchorPaneCadastrosAdocoesDialog(adocao);
-            if (buttonConfirmarClicked) {
-                try {
-                    connection.setAutoCommit(false);
-                    if (adocaoDAO.alterar(adocao)) {
-                        connection.commit();
-                        carregarTableViewAdocoes();
-                    } else {
-                        connection.rollback();
-                        mostrarAlerta("Erro", "Erro ao atualizar Adoção", null);
-                    }
-                } catch (SQLException ex) {
-                    try {
-                        connection.rollback();
-                    } catch (SQLException ex1) {
-                        Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
-                    Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Por favor, escolha uma adoção na Tabela!");
-            alert.show();
-        }
-    }
-
-    @FXML
-    public void handleButtonRemover() throws IOException, SQLException {
+    public void handleButtonRemoverAdocao() {
         Adocao adocao = tableViewAdocoes.getSelectionModel().getSelectedItem();
         if (adocao != null) {
             try {
+                System.out.println("Tentando remover...");
                 connection.setAutoCommit(false);
-                if (adocaoDAO.remover(adocao)) {
-                    connection.commit();
-                    carregarTableViewAdocoes();
-                } else {
-                    connection.rollback();
-                    mostrarAlerta("Erro", "Erro ao remover Adoção", null);
-                }
+
+                // 1. Primeiro remove a adoção
+                adocaoDAO.remover(adocao);
+                
+                // 2. Depois atualiza o status do pet
+                // Buscando pet no dao para ter certeza que está vindo certo
+                Pet pet = petDAO.buscar(adocao.getPet()); // Garante dados completos
+                atualizarStatusPet(pet, StatusPetEnum.DISPONIVEL);
+
+                connection.commit();
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Adoção Removida", null, "A adoção foi removida com sucesso!");
+                atualizarTabelas();
+                
+                
             } catch (SQLException ex) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex1) {
-                    Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-                Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName()).log(Level.SEVERE, null, ex);
+                rollbackTransacao(ex);
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro ao Remover", "Ocorreu um erro ao remover a adoção", 
+                "Não foi possível remover a adoção!");
             }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Por favor, escolha uma adoção na Tabela!");
-            alert.show();
+        }
+    }
+    
+    private boolean validarCampos(Usuario usuario, Pet pet) {
+        if (usuario == null || pet == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campos Obrigatórios", "Seleção necessária", 
+                "Por favor, selecione um usuário e um pet!");
+            return false;
+        }
+        return true;
+    }
+
+    
+    private void atualizarStatusPet(Pet pet, StatusPetEnum status) throws SQLException {
+        pet.setStatus(status);
+        petDAO.alterar(pet);
+    }
+
+    private void atualizarTabelas() {
+        carregarTableViewAdocoes();
+        carregarTableViewPets();
+    }
+
+    private void limparCampos() {
+        comboBoxUsuarios.getSelectionModel().clearSelection();
+        tableViewPets.getSelectionModel().clearSelection();
+    }
+
+
+  
+    private void rollbackTransacao(SQLException ex) {
+        try {
+            connection.rollback();
+        } catch (SQLException ex1) {
+            Logger.getLogger(FXMLAnchorPaneCadastrosAdocoesController.class.getName())
+                .log(Level.SEVERE, "Erro no rollback", ex1);
         }
     }
 
-    public boolean showFXMLAnchorPaneCadastrosAdocoesDialog(Adocao adocao) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(FXMLAnchorPaneCadastrosAdocoesDialogController.class.getResource("/adocaopets/view/FXMLAnchorPaneCadastrosAdocoesDialog.fxml"));
-        AnchorPane page = (AnchorPane) loader.load();
-
-        Stage dialogStage = new Stage();
-        dialogStage.setTitle("Registro de Adoções");
-        dialogStage.initModality(Modality.WINDOW_MODAL);
-        Scene scene = new Scene(page);
-        dialogStage.setScene(scene);
-
-        FXMLAnchorPaneCadastrosAdocoesDialogController controller = loader.getController();
-        controller.setDialogStage(dialogStage);
-        controller.setAdocao(adocao);
-
-        dialogStage.showAndWait();
-
-        return controller.isButtonConfirmarClicked();
-    }
-
-    private void mostrarAlerta(String titulo, String cabecalho, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void mostrarAlerta(Alert.AlertType tipoAlerta, String titulo, String cabecalho, String mensagem) {
+        Alert alert = new Alert(tipoAlerta);
         alert.setTitle(titulo);
         alert.setHeaderText(cabecalho);
         alert.setContentText(mensagem);
         alert.showAndWait();
-    }
-
-    private boolean marcarPetAdotado(Pet pet) throws SQLException {
-        pet.setStatus(StatusPetEnum.ADOTADO);
-        return petDAO.alterar(pet);
     }
 }

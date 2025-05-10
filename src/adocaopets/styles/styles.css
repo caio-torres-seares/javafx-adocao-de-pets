@@ -21,3 +21,17 @@
     -fx-border-color: #bdc3c7;
     -fx-border-radius: 4;
 }
+
+.buttonAdicionarPet {
+    -fx-background-color: #4CAF50; /* verde */
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+}
+
+.buttonRemoverPet {
+    -fx-background-color: #f44336; /* vermelho */
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+}
