@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="510.0" prefWidth="780.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adocaopets.controller.FXMLAnchorPaneCadastrosUsuariosController">
+<AnchorPane prefHeight="510.0" prefWidth="780.0" style="-fx-background-color: #f5f5f5;" stylesheets="@../styles/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adocaopets.controller.FXMLAnchorPaneCadastrosUsuariosController">
     <SplitPane dividerPositions="0.4" orientation="HORIZONTAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         
         <!-- Painel esquerdo - Lista de Usuários -->

@@ -19,7 +19,7 @@
           <Menu mnemonicParsing="false" text="Processos">
             <items>
               <MenuItem fx:id="menuItemProcessosAdocao" mnemonicParsing="false" onAction="#handleMenuItemProcessosAdocao" text="Adoção" />
-                  <MenuItem fx:id="menuItemProcessosVoluntariado" mnemonicParsing="false" text="Voluntariado" />
+                  <MenuItem fx:id="menuItemProcessosVoluntariado" mnemonicParsing="false" onAction="#handleMenuItemProcessosVoluntariado" text="Voluntariado" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Relatórios">

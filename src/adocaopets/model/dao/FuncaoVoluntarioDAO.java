@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FuncaoVoluntarioDAO {
+
     private Connection connection;
 
     public Connection getConnection() {
@@ -104,4 +105,18 @@ public class FuncaoVoluntarioDAO {
         }
         return retorno;
     }
-} 
+
+    public int contarVoluntariosPorFuncao(int funcaoId) {
+        String sql = "SELECT COUNT(*) FROM voluntarios_funcoes WHERE funcao_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, funcaoId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FuncaoVoluntarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+}

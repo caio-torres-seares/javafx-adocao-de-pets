@@ -1,14 +1,17 @@
 // ALUNOS: CAIO TORRES SEARES e GABRIELA BENEVIDES PEREIRA MARQUES
 package adocaopets.model.domain;
 
+import java.util.Objects;
 
 public class FuncaoVoluntario {
+
     private Integer id;
     private String nome;
     private String descricao;
     private Integer limiteVoluntarios;
 
-    public FuncaoVoluntario() {}
+    public FuncaoVoluntario() {
+    }
 
     public FuncaoVoluntario(String nome, String descricao, Integer limiteVoluntarios) {
         this.nome = nome;
@@ -53,5 +56,21 @@ public class FuncaoVoluntario {
     public String toString() {
         return nome;
     }
-}
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        FuncaoVoluntario that = (FuncaoVoluntario) obj;
+        return id == that.id; // Compara por ID (ou outro atributo único)
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Coerente com o equals()
+    }
+}

@@ -24,7 +24,7 @@ public class UsuarioDAO {
         this.connection = connection;
     }
 
-    public boolean inserir(Usuario usuario)  {
+    public boolean inserir(Usuario usuario) {
         String sql = "INSERT INTO usuarios (nome, cpf) VALUES (?, ?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -38,7 +38,7 @@ public class UsuarioDAO {
         }
     }
 
-    public boolean alterar(Usuario usuario) throws SQLException{
+    public boolean alterar(Usuario usuario) throws SQLException {
         String sql = "UPDATE usuarios SET nome = ?, cpf = ? WHERE id = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -53,7 +53,7 @@ public class UsuarioDAO {
         }
     }
 
-    public boolean remover(Usuario usuario) throws SQLException{
+    public boolean remover(Usuario usuario) throws SQLException {
         String sql = "DELETE FROM usuarios WHERE id = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -104,5 +104,19 @@ public class UsuarioDAO {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return retorno;
+    }
+
+    public boolean atualizarStatusVoluntario(int usuarioId, boolean status) {
+        String sql = "UPDATE usuarios SET voluntario = ? WHERE id = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setBoolean(1, status);
+            stmt.setInt(2, usuarioId);
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 }
