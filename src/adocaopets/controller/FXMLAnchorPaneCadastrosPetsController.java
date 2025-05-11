@@ -227,11 +227,24 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
         
         if (pet.getStatus() == StatusPetEnum.ADOTADO){
             radioStatusPetAdotado.setSelected(true);
-            radioStatusPetAdotado.setDisable(false);
+            setarRadioButtonAtivo(radioStatusPetAdotado);
         } else if (pet.getStatus() == StatusPetEnum.DISPONIVEL){
             radioStatusPetDisponivel.setSelected(true);
+            setarRadioButtonAtivo(radioStatusPetDisponivel);
         } else {
             radioStatusPetIndisponivel.setSelected(true);
+            setarRadioButtonAtivo(radioStatusPetIndisponivel);
+        }
+    }
+    
+    private void setarRadioButtonAtivo(RadioButton button) {
+        // Desativa os botões do Status pois não quero que permita a alteração deles
+        radioStatusPetAdotado.setDisable(true);
+        radioStatusPetDisponivel.setDisable(true);
+        radioStatusPetIndisponivel.setDisable(true);
+        // Após isso, seto o botão passado como ativo pois é o botão que corresponde ao status atual do pet
+        if (button != null) {
+            button.setDisable(false);
         }
     }
     
@@ -242,6 +255,8 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
         textFieldRaca.clear();
         spinnerIdade.getValueFactory().setValue(1);
         toggleGroupSexo.selectToggle(null);
+        toggleGroupStatusPet.selectToggle(null);
+        setarRadioButtonAtivo(null);
     }
     
     private Pet criarPetDosCampos() {
