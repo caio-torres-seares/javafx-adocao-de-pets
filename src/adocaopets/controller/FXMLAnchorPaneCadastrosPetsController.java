@@ -63,6 +63,15 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
     private RadioButton radioFemea;
     
     @FXML
+    private RadioButton radioStatusPetDisponivel;
+    
+    @FXML
+    private RadioButton radioStatusPetIndisponivel;
+  
+    @FXML
+    private RadioButton radioStatusPetAdotado;
+    
+    @FXML
     private Button buttonInserir;
     
     @FXML
@@ -76,7 +85,9 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
     
     private ObservableList<Pet> listaPets;
     private Pet petSelecionado;
+    
     private ToggleGroup toggleGroupSexo;
+    private ToggleGroup toggleGroupStatusPet;
 
     private final Database database = DatabaseFactory.getDatabase("postgresql");
     private final Connection connection = database.conectar();
@@ -97,11 +108,16 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
         // Configurar spinner de idade
         spinnerIdade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99, 1));
         
-        // Configurar grupo de radio buttons
+        // Configurar grupo de radio buttons para Sexo
         toggleGroupSexo = new ToggleGroup();
         radioMacho.setToggleGroup(toggleGroupSexo);
         radioFemea.setToggleGroup(toggleGroupSexo);
         
+        // Configurar grupo de radio buttons para Status 
+        toggleGroupStatusPet = new ToggleGroup();
+        radioStatusPetDisponivel.setToggleGroup(toggleGroupStatusPet);
+        radioStatusPetIndisponivel.setToggleGroup(toggleGroupStatusPet);
+        radioStatusPetAdotado.setToggleGroup(toggleGroupStatusPet);
         // Carregar dados iniciais
         carregarDados();
         
@@ -207,6 +223,15 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
             radioMacho.setSelected(true);
         } else {
             radioFemea.setSelected(true);
+        }
+        
+        if (pet.getStatus() == StatusPetEnum.ADOTADO){
+            radioStatusPetAdotado.setSelected(true);
+            radioStatusPetAdotado.setDisable(false);
+        } else if (pet.getStatus() == StatusPetEnum.DISPONIVEL){
+            radioStatusPetDisponivel.setSelected(true);
+        } else {
+            radioStatusPetIndisponivel.setSelected(true);
         }
     }
     
