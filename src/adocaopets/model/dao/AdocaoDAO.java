@@ -136,4 +136,20 @@ public class AdocaoDAO {
         }
         return retorno;
     }
+    
+    public int contarAdocoesPorUsuario(Usuario usuario) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM adocoes WHERE usuario_id = ?";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, usuario.getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdocaoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
 }
