@@ -24,14 +24,14 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Relatórios">
             <items>
-              <MenuItem fx:id="menuItemRelatoriosPetsDisponiveisAdotados" mnemonicParsing="false" text="Pets" />
-                  <MenuItem fx:id="menuItemRelatoriosVoluntariosPorFuncao" mnemonicParsing="false" text="Voluntários" />
+              <MenuItem fx:id="menuItemRelatoriosPetsDisponiveisAdotados" mnemonicParsing="false" onAction="#handleMenuItemRelatoriosPetsDisponiveisAdotados" text="Pets" />
+                  <MenuItem fx:id="menuItemRelatoriosVoluntariosPorFuncao" mnemonicParsing="false" onAction="#handleMenuItemRelatoriosVoluntariosPorFuncao" text="Voluntários" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Gráficos">
                <items>
-                  <MenuItem fx:id="menuItemGraficosAdocoesPorMes" mnemonicParsing="false" text="Adoções por mês" />
-                  <MenuItem fx:id="menuItemGraficosVoluntariosPorMes" mnemonicParsing="false" text="Voluntáriados por mês" />
+                  <MenuItem fx:id="menuItemGraficosAdocoesPorMes" mnemonicParsing="false" onAction="#handleMenuItemGraficosAdocoesPorMes" text="Adoções por mês" />
+                  <MenuItem fx:id="menuItemGraficosVoluntariosPorMes" mnemonicParsing="false" onAction="#handleMenuItemGraficosVoluntariosPorMes" text="Voluntários por mês" />
                </items>
             </Menu>
         </menus>

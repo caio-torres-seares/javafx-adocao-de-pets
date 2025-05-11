@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import adocaopets.model.domain.FuncaoVoluntario;
 import adocaopets.model.domain.Usuario;
 import adocaopets.model.domain.Voluntario;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VoluntarioDAO {
 
@@ -264,5 +266,32 @@ public class VoluntarioDAO {
         return false;
     }
     
-    
-}
+ 
+        public Map<Integer, ArrayList> listarQuantidadeVoluntariosPorMes() {
+        String sql = "select count(id), extract(year from data_cadastro) as ano, extract(month from data_cadastro) as mes from voluntarios group by ano, mes order by ano, mes";
+        Map<Integer, ArrayList> retorno = new HashMap();
+        
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultado = stmt.executeQuery();
+
+            while (resultado.next()) {
+                ArrayList linha = new ArrayList();
+                if (!retorno.containsKey(resultado.getInt("ano")))
+                {
+                    linha.add(resultado.getInt("mes"));
+                    linha.add(resultado.getInt("count"));
+                    retorno.put(resultado.getInt("ano"), linha);
+                }else{
+                    ArrayList linhaNova = retorno.get(resultado.getInt("ano"));
+                    linhaNova.add(resultado.getInt("mes"));
+                    linhaNova.add(resultado.getInt("count"));
+                }
+            }
+            return retorno;
+        } catch (SQLException ex) {
+            Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
+    }
+}   
