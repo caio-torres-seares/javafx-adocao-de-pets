@@ -24,7 +24,11 @@ public class Main extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        stage.setMinWidth(800);  // Largura mínima
+        stage.setMinHeight(580); // Altura mínima
+        stage.setTitle("Sistema de Adoção de Pets");
         stage.show();
+
     }
 
     /**
