@@ -30,7 +30,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Gráficos">
                <items>
-                  <MenuItem fx:id="menuItemGraficosAdocoesPorMes" mnemonicParsing="false" onAction="#handleMenuItemGraficosAdocoesPorMes" text="Adoções por mês" />
+                  <MenuItem fx:id="menuItemGraficosAdocoesPorMes" mnemonicParsing="false" onAction="#handleMenuItemGraficosPetsAdotadosPorMes" text="Adoções por mês" />
                   <MenuItem fx:id="menuItemGraficosVoluntariosPorMes" mnemonicParsing="false" onAction="#handleMenuItemGraficosVoluntariosPorMes" text="Voluntários por mês" />
                </items>
             </Menu>

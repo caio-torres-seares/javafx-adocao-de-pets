@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="adocaopets.controller.FXMLAnchorPaneGraficosVoluntariosPorMesController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="780.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="adocaopets.controller.FXMLAnchorPaneGraficosVoluntariosPorMesController">
    <children>
       <BarChart fx:id="barChart" prefHeight="400.0" prefWidth="600.0" title="Voluntários Por Mês" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <xAxis>
