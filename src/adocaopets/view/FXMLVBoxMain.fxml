@@ -24,7 +24,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Relatórios">
             <items>
-              <MenuItem fx:id="menuItemRelatoriosPetsDisponiveisAdotados" mnemonicParsing="false" onAction="#handleMenuItemRelatoriosPetsDisponiveisAdotados" text="Pets" />
+              <MenuItem fx:id="menuItemRelatoriosPetsDisponiveisAdotados" mnemonicParsing="false" onAction="#handleMenuItemRelatoriosPetsDisponiveisEAdotados" text="Pets" />
                   <MenuItem fx:id="menuItemRelatoriosVoluntariosPorFuncao" mnemonicParsing="false" onAction="#handleMenuItemRelatoriosVoluntariosPorFuncao" text="Voluntários" />
             </items>
           </Menu>
