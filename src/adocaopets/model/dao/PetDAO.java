@@ -156,6 +156,33 @@ public class PetDAO {
         return retorno;
     }
     
+    public List<Pet> listarAdotados() {
+        String sql = "SELECT * FROM pets WHERE status = 'ADOTADO'";
+        List<Pet> retorno = new ArrayList<>();
+        
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultado = stmt.executeQuery();
+            
+            while (resultado.next()) {
+                Pet pet = new Pet();
+                pet.setId(resultado.getInt("id"));
+                pet.setNome(resultado.getString("nome"));
+                pet.setEspecie(resultado.getString("especie"));
+                pet.setRaca(resultado.getString("raca"));
+                pet.setIdade(resultado.getInt("idade"));
+                pet.setSexo(SexoPetEnum.fromValorBanco(resultado.getString("sexo")));
+                pet.setStatus(StatusPetEnum.valueOf(resultado.getString("status")));
+
+                retorno.add(pet);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
+    }
+    
     public List<Pet> listarDisponiveisParaAdocao(Integer petIdAtualDaAdocao) {
         String sql = "SELECT * FROM pets WHERE status = 'DISPONIVEL' OR id = ?";
         
