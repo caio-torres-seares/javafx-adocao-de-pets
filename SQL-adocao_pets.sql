@@ -85,7 +85,11 @@ INSERT INTO funcoes_voluntario (nome, descricao, limite_voluntarios) VALUES
 -- Inserir pets
 INSERT INTO pets (nome, especie, raca, idade, sexo, status) VALUES 
 ('Rex', 'Cachorro', 'Labrador', 3, 'M', 'DISPONIVEL'),
-('Mimi', 'Gato', 'Siamês', 2, 'F', 'DISPONIVEL'),
+('Malu', 'Cachorro', 'Pinscher', 2, 'F', 'DISPONIVEL'),
+('Minnie', 'Cachorro', 'Pinscher', 3, 'F', 'DISPONIVEL'),
+('Nina', 'Cachorro', 'Pinscher', 11, 'F', 'DISPONIVEL'),
+('Shoyo', 'Pássaro', 'Agapornis', 2, 'F', 'DISPONIVEL'),
+('Tom', 'Gato', 'Siamês', 4, 'M', 'DISPONIVEL'),
 ('Thor', 'Cachorro', 'Bulldog', 4, 'M', 'INDISPONIVEL');
 
 -- Inserir voluntários (Maria Santos é voluntária)
@@ -97,13 +101,23 @@ INSERT INTO voluntarios_funcoes (voluntario_id, funcao_id) VALUES
 (1, 1), -- Banho
 (1, 3); -- Passeio
 
--- Inserir uma adoção (João adotou o Thor)
+-- Inserir uma adoção (João adotou 5 pets)
 INSERT INTO adocoes (usuario_id, pet_id, data) VALUES 
+(1, 2, CURRENT_DATE);
 (1, 3, CURRENT_DATE);
+(1, 4, CURRENT_DATE);
+(1, 5, CURRENT_DATE);
+(1, 6, CURRENT_DATE);
+
 
 -- Atualizar status do pet adotado
+UPDATE pets SET status = 'ADOTADO' WHERE id = 2;
 UPDATE pets SET status = 'ADOTADO' WHERE id = 3;
+UPDATE pets SET status = 'ADOTADO' WHERE id = 4;
+UPDATE pets SET status = 'ADOTADO' WHERE id = 5;
+UPDATE pets SET status = 'ADOTADO' WHERE id = 6;
 
+-- Caso queira listar as tabelas
 SELECT * FROM pets;
 SELECT * FROM funcoes_voluntario;
 SELECT * FROM voluntarios;
