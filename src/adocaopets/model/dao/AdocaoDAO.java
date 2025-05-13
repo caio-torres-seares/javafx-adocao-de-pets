@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -150,6 +152,34 @@ public class AdocaoDAO {
             Logger.getLogger(AdocaoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
+    }
+    
+    public Map<Integer, ArrayList> listarQuantidadePetsAdotadosPorMes() {
+        String sql = "select count(id), extract(year from data) as ano, extract(month from data) as mes from adocoes group by ano, mes order by ano, mes";
+        Map<Integer, ArrayList> retorno = new HashMap();
+        
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultado = stmt.executeQuery();
+
+            while (resultado.next()) {
+                ArrayList linha = new ArrayList();
+                if (!retorno.containsKey(resultado.getInt("ano")))
+                {
+                    linha.add(resultado.getInt("mes"));
+                    linha.add(resultado.getInt("count"));
+                    retorno.put(resultado.getInt("ano"), linha);
+                }else{
+                    ArrayList linhaNova = retorno.get(resultado.getInt("ano"));
+                    linhaNova.add(resultado.getInt("mes"));
+                    linhaNova.add(resultado.getInt("count"));
+                }
+            }
+            return retorno;
+        } catch (SQLException ex) {
+            Logger.getLogger(AdocaoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
     }
 
 }
