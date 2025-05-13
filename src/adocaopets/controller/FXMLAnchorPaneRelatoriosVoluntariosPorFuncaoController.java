@@ -40,7 +40,7 @@ public class FXMLAnchorPaneRelatoriosVoluntariosPorFuncaoController implements I
     @FXML
     private TableColumn<Voluntario, String> tableColumnVoluntarioNome;
     @FXML
-    private TableColumn<Voluntario, Boolean> tableColumnVoluntarioAtivo;
+    private TableColumn<Voluntario, String> tableColumnVoluntarioAtivo;
     @FXML
     private TableColumn<Voluntario, String> tableColumnVoluntarioFuncao;
     @FXML
@@ -86,7 +86,9 @@ public class FXMLAnchorPaneRelatoriosVoluntariosPorFuncaoController implements I
         tableColumnVoluntarioNome.setCellValueFactory(cellData
                 -> new SimpleStringProperty(cellData.getValue().getUsuario().getNome())
         );
-        tableColumnVoluntarioAtivo.setCellValueFactory(new PropertyValueFactory<>("ativo"));
+        tableColumnVoluntarioAtivo.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().isAtivo() ? "Sim" : "Não")
+        );
         tableColumnVoluntarioDataCadastro.setCellValueFactory(new PropertyValueFactory<>("dataCadastro"));
 
         // Modificando para mostrar apenas a função selecionada
@@ -121,8 +123,7 @@ public class FXMLAnchorPaneRelatoriosVoluntariosPorFuncaoController implements I
         if (funcaoVoluntario != null) {
             try {
                 filtro.put("id_funcao", funcaoVoluntario.getId());
-                System.out.println("ID da função selecionada: " + funcaoVoluntario.getId());
-
+                
                 URL url = getClass().getResource("/adocaopets/relatorios/AdocaoPetsRelatorioVoluntarios.jasper");
                 if (url == null) {
                     throw new JRException("Arquivo do relatório não encontrado");
