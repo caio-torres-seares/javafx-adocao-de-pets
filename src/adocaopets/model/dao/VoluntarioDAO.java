@@ -29,64 +29,37 @@ public class VoluntarioDAO {
         this.connection = connection;
     }
 
-    public boolean inserir(Voluntario voluntario) {
-        try {
-            // Desativa o autoCommit para controle manual da transação
-            connection.setAutoCommit(false);
+    public boolean inserir(Voluntario voluntario) throws SQLException {
+        String sqlVoluntario = "INSERT INTO voluntarios(usuario_id, data_cadastro, ativo) VALUES(?,?,?)";
+        try (PreparedStatement stmtVoluntario = connection.prepareStatement(sqlVoluntario, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            stmtVoluntario.setInt(1, voluntario.getUsuario().getId());
+            stmtVoluntario.setDate(2, Date.valueOf(voluntario.getDataCadastro()));
+            stmtVoluntario.setBoolean(3, voluntario.isAtivo());
+            stmtVoluntario.executeUpdate();
 
-            // 1. Insere o voluntário na tabela 'voluntarios'
-            String sqlVoluntario = "INSERT INTO voluntarios(usuario_id, data_cadastro, ativo) VALUES(?,?,?)";
-            try (PreparedStatement stmtVoluntario = connection.prepareStatement(sqlVoluntario, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                stmtVoluntario.setInt(1, voluntario.getUsuario().getId());
-                stmtVoluntario.setDate(2, Date.valueOf(voluntario.getDataCadastro()));
-                stmtVoluntario.setBoolean(3, voluntario.isAtivo());
-                stmtVoluntario.executeUpdate();
-
-                // Recupera o ID gerado
-                try (ResultSet rs = stmtVoluntario.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        voluntario.setId(rs.getInt(1));
-                    }
+            try (ResultSet rs = stmtVoluntario.getGeneratedKeys()) {
+                if (rs.next()) {
+                    voluntario.setId(rs.getInt(1));
                 }
-            }
-
-            // 2. Atualiza o status do usuário para "voluntário"
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            usuarioDAO.setConnection(connection);
-            usuarioDAO.atualizarStatusVoluntario(voluntario.getUsuario().getId(), true);
-
-            // 3. Insere as funções na tabela 'voluntarios_funcoes'
-            if (!voluntario.getFuncoes().isEmpty()) {
-                String sqlFuncoes = "INSERT INTO voluntarios_funcoes(voluntario_id, funcao_id) VALUES(?,?)";
-                try (PreparedStatement stmtFuncoes = connection.prepareStatement(sqlFuncoes)) {
-                    for (FuncaoVoluntario funcao : voluntario.getFuncoes()) {
-                        stmtFuncoes.setInt(1, voluntario.getId());
-                        stmtFuncoes.setInt(2, funcao.getId());
-                        stmtFuncoes.addBatch(); // Otimização para inserções em lote
-                    }
-                    stmtFuncoes.executeBatch(); // Executa todas as inserções de uma vez
-                }
-            }
-
-            // Confirma todas as operações
-            connection.commit();
-            return true;
-
-        } catch (SQLException ex) {
-            try {
-                connection.rollback(); // Reverte em caso de erro
-            } catch (SQLException e) {
-                Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, "Falha ao reverter transação", e);
-            }
-            Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, "Erro ao inserir voluntário", ex);
-            return false;
-        } finally {
-            try {
-                connection.setAutoCommit(true); // Restaura o autoCommit padrão
-            } catch (SQLException ex) {
-                Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, "Falha ao restaurar autoCommit", ex);
             }
         }
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        usuarioDAO.setConnection(connection);
+        usuarioDAO.atualizarStatusVoluntario(voluntario.getUsuario().getId(), true);
+
+        if (!voluntario.getFuncoes().isEmpty()) {
+            String sqlFuncoes = "INSERT INTO voluntarios_funcoes(voluntario_id, funcao_id) VALUES(?,?)";
+            try (PreparedStatement stmtFuncoes = connection.prepareStatement(sqlFuncoes)) {
+                for (FuncaoVoluntario funcao : voluntario.getFuncoes()) {
+                    stmtFuncoes.setInt(1, voluntario.getId());
+                    stmtFuncoes.setInt(2, funcao.getId());
+                    stmtFuncoes.addBatch();
+                }
+                stmtFuncoes.executeBatch();
+            }
+        }
+        return true;
     }
 
     public boolean alterar(Voluntario voluntario) {
@@ -99,7 +72,6 @@ public class VoluntarioDAO {
             stmt.setInt(4, voluntario.getId());
             stmt.execute();
 
-            // Atualizar funções do voluntário
             sql = "DELETE FROM voluntarios_funcoes WHERE voluntario_id=?";
             stmt = connection.prepareStatement(sql);
             stmt.setInt(1, voluntario.getId());
@@ -121,51 +93,24 @@ public class VoluntarioDAO {
         }
     }
 
-    public boolean remover(Voluntario voluntario) {
-        try {
-            // Desativa o autoCommit para controlar a transação manualmente
-            connection.setAutoCommit(false);
-
-            // 1. Remove as funções do voluntário
-            String sqlDeleteFuncoes = "DELETE FROM voluntarios_funcoes WHERE voluntario_id = ?";
-            try (PreparedStatement stmtFuncoes = connection.prepareStatement(sqlDeleteFuncoes)) {
-                stmtFuncoes.setInt(1, voluntario.getId());
-                stmtFuncoes.executeUpdate();
-            }
-
-            // 2. Remove o voluntário
-            String sqlDeleteVoluntario = "DELETE FROM voluntarios WHERE id = ?";
-            try (PreparedStatement stmtVoluntario = connection.prepareStatement(sqlDeleteVoluntario)) {
-                stmtVoluntario.setInt(1, voluntario.getId());
-                stmtVoluntario.executeUpdate();
-            }
-
-            // 3. Atualiza o status do usuário para "não voluntário"
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            usuarioDAO.setConnection(connection); // Usa a mesma conexão
-            usuarioDAO.atualizarStatusVoluntario(voluntario.getUsuario().getId(), false);
-
-            // Confirma a transação
-            connection.commit();
-            return true;
-
-        } catch (SQLException ex) {
-            try {
-                // Reverte a transação em caso de erro
-                connection.rollback();
-            } catch (SQLException e) {
-                Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, "Falha ao reverter transação", e);
-            }
-            Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, "Erro ao remover voluntário", ex);
-            return false;
-        } finally {
-            try {
-                // Restaura o autoCommit para o estado padrão
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, "Falha ao restaurar autoCommit", ex);
-            }
+    public boolean remover(Voluntario voluntario) throws SQLException {
+        String sqlDeleteFuncoes = "DELETE FROM voluntarios_funcoes WHERE voluntario_id = ?";
+        try (PreparedStatement stmtFuncoes = connection.prepareStatement(sqlDeleteFuncoes)) {
+            stmtFuncoes.setInt(1, voluntario.getId());
+            stmtFuncoes.executeUpdate();
         }
+
+        String sqlDeleteVoluntario = "DELETE FROM voluntarios WHERE id = ?";
+        try (PreparedStatement stmtVoluntario = connection.prepareStatement(sqlDeleteVoluntario)) {
+            stmtVoluntario.setInt(1, voluntario.getId());
+            stmtVoluntario.executeUpdate();
+        }
+        
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        usuarioDAO.setConnection(connection);
+        usuarioDAO.atualizarStatusVoluntario(voluntario.getUsuario().getId(), false);
+        
+        return true;
     }
 
     public List<Voluntario> listar() {
@@ -185,7 +130,6 @@ public class VoluntarioDAO {
                 voluntario.setDataCadastro(resultado.getDate("data_cadastro").toLocalDate());
                 voluntario.setAtivo(resultado.getBoolean("ativo"));
 
-                // Buscar funções do voluntário
                 String sqlFuncoes = "SELECT f.* FROM funcoes_voluntario f "
                         + "INNER JOIN voluntarios_funcoes vf ON f.id = vf.funcao_id "
                         + "WHERE vf.voluntario_id = ?";
@@ -316,7 +260,6 @@ public class VoluntarioDAO {
                 voluntario.setDataCadastro(resultado.getDate("data_cadastro").toLocalDate());
                 voluntario.setAtivo(resultado.getBoolean("ativo"));
 
-                // Carrega as funções do voluntário
                 String sqlFuncoes = "SELECT f.* FROM funcoes_voluntario f INNER JOIN voluntarios_funcoes vf ON f.id = vf.funcao_id WHERE vf.voluntario_id = ?;";
                 PreparedStatement stmtFuncoes = connection.prepareStatement(sqlFuncoes);
                 stmtFuncoes.setInt(1, voluntario.getId());

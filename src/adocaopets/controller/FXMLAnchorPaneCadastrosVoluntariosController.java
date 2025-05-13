@@ -33,6 +33,9 @@ import javafx.beans.property.SimpleStringProperty;
 import java.util.stream.Collectors;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class
@@ -99,7 +102,6 @@ public class FXMLAnchorPaneCadastrosVoluntariosController implements Initializab
         voluntarioDAO.setConnection(connection);
         funcaoVoluntarioDAO.setConnection(connection);
 
-        // Da TableView dos voluntários
         tableColumnVoluntarioNome.setCellValueFactory(cellData
                 -> new SimpleStringProperty(cellData.getValue().getUsuario().getNome())
         );
@@ -140,7 +142,6 @@ public class FXMLAnchorPaneCadastrosVoluntariosController implements Initializab
             }
         });
 
-        // Da tableView das funções
         tableColumnVoluntarioFuncaoNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
         observableListFuncoesVoluntario = FXCollections.observableArrayList();
@@ -221,10 +222,28 @@ public class FXMLAnchorPaneCadastrosVoluntariosController implements Initializab
     private void handleButtonRemoverVoluntario() {
         Voluntario voluntarioSelecionado = tableViewVoluntarios.getSelectionModel().getSelectedItem();
         if (voluntarioSelecionado != null) {
-            if (voluntarioDAO.remover(voluntarioSelecionado)) {
-                carregarTableViewVoluntarios();
-                limparCamposFormulario();
-                mostrarAlerta("Sucesso!", "Voluntário removido com sucesso!", Alert.AlertType.INFORMATION);
+            try {
+                connection.setAutoCommit(false);
+
+                if (voluntarioDAO.remover(voluntarioSelecionado)) {
+                    connection.commit();
+                    carregarTableViewVoluntarios();
+                    limparCamposFormulario();
+                    mostrarAlerta("Sucesso!", "Voluntário removido com sucesso!", Alert.AlertType.INFORMATION);
+                }
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    Logger.getLogger(FXMLAnchorPaneCadastrosVoluntariosController.class.getName()).log(Level.SEVERE, "Falha ao reverter transação", ex);
+                }
+                mostrarAlerta("Erro!", "Erro ao remover voluntário: " + e.getMessage(), Alert.AlertType.ERROR);
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FXMLAnchorPaneCadastrosVoluntariosController.class.getName()).log(Level.SEVERE, "Falha ao restaurar autoCommit", ex);
+                }
             }
         } else {
             mostrarAlerta("Erro!", "Nenhum voluntário selecionado!", Alert.AlertType.ERROR);
@@ -243,13 +262,17 @@ public class FXMLAnchorPaneCadastrosVoluntariosController implements Initializab
             voluntario.setFuncoes(new ArrayList<>(observableListFuncoesVoluntario));
 
             try {
+                connection.setAutoCommit(false);
+
                 if (editando) {
                     voluntario.setId(tableViewVoluntarios.getSelectionModel().getSelectedItem().getId());
                     if (voluntarioDAO.alterar(voluntario)) {
+                        connection.commit();
                         mostrarAlerta("Sucesso!", "Voluntário atualizado!", Alert.AlertType.INFORMATION);
                     }
                 } else {
                     if (voluntarioDAO.inserir(voluntario)) {
+                        connection.commit();
                         mostrarAlerta("Sucesso!", "Voluntário cadastrado!", Alert.AlertType.INFORMATION);
                     }
                 }
@@ -257,8 +280,19 @@ public class FXMLAnchorPaneCadastrosVoluntariosController implements Initializab
                 carregarTableViewVoluntarios();
                 limparCamposFormulario();
 
-            } catch (Exception e) {
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    Logger.getLogger(FXMLAnchorPaneCadastrosVoluntariosController.class.getName()).log(Level.SEVERE, "Falha ao reverter transação", ex);
+                }
                 mostrarAlerta("Erro!", "Erro ao salvar: " + e.getMessage(), Alert.AlertType.ERROR);
+            } finally {
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FXMLAnchorPaneCadastrosVoluntariosController.class.getName()).log(Level.SEVERE, "Falha ao restaurar autoCommit", ex);
+                }
             }
         }
     }
@@ -323,9 +357,9 @@ public class FXMLAnchorPaneCadastrosVoluntariosController implements Initializab
             mostrarAlerta("Erro de Validação", errorMessage, Alert.AlertType.ERROR);
             return false;
         }
-}
+    }
 
-private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
+    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
