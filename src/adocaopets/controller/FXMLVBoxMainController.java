@@ -78,8 +78,8 @@ public class FXMLVBoxMainController implements Initializable {
     }
     
     @FXML
-    public void handleMenuItemGraficosAdocoesPorMes() throws IOException {
-        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource(""));
+    public void handleMenuItemGraficosPetsAdotadosPorMes() throws IOException {
+        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/adocaopets/view/FXMLAnchorPaneGraficosPetsAdotadosPorMes.fxml"));
         anchorPane.getChildren().setAll(a);
     }
     
