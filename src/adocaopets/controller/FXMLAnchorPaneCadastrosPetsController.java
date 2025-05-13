@@ -40,52 +40,52 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
 
     @FXML
     private TableView<Pet> tableViewPets;
-    
+
     @FXML
     private Label labelPetId;
-    
+
     @FXML
     private TextField textFieldNome;
-    
+
     @FXML
     private ComboBox<String> comboBoxEspecie;
-    
+
     @FXML
     private TextField textFieldRaca;
-    
+
     @FXML
     private Spinner<Integer> spinnerIdade;
-    
+
     @FXML
     private RadioButton radioMacho;
-    
+
     @FXML
     private RadioButton radioFemea;
-    
+
     @FXML
     private RadioButton radioStatusPetDisponivel;
-    
+
     @FXML
     private RadioButton radioStatusPetIndisponivel;
-  
+
     @FXML
     private RadioButton radioStatusPetAdotado;
-    
+
     @FXML
     private Button buttonInserir;
-    
+
     @FXML
     private Button buttonRemover;
-    
+
     @FXML
     private Button buttonSalvar;
-    
+
     @FXML
     private Button buttonCancelar;
-    
+
     private ObservableList<Pet> listaPets;
     private Pet petSelecionado;
-    
+
     private ToggleGroup toggleGroupSexo;
     private ToggleGroup toggleGroupStatusPet;
 
@@ -95,24 +95,24 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         petDAO.setConnection(connection);
-        
+
         // Configurar lista de pets
         listaPets = FXCollections.observableArrayList();
         tableViewPets.setItems(listaPets);
-        
+
         // Configurar combo box de espécies
         comboBoxEspecie.getItems().addAll("Cachorro", "Gato", "Pássaro", "Outro");
-        
+
         // Configurar spinner de idade
         spinnerIdade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99, 1));
-        
+
         // Configurar grupo de radio buttons para Sexo
         toggleGroupSexo = new ToggleGroup();
         radioMacho.setToggleGroup(toggleGroupSexo);
         radioFemea.setToggleGroup(toggleGroupSexo);
-        
+
         // Configurar grupo de radio buttons para Status 
         toggleGroupStatusPet = new ToggleGroup();
         radioStatusPetDisponivel.setToggleGroup(toggleGroupStatusPet);
@@ -120,34 +120,34 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
         radioStatusPetAdotado.setToggleGroup(toggleGroupStatusPet);
         // Carregar dados iniciais
         carregarDados();
-        
+
         // Configurar listeners
         configurarListeners();
-        
+
     }
-    
+
     private void carregarDados() {
         listaPets.clear();
         listaPets.addAll(petDAO.listarTodos());
     }
-    
+
     private void configurarListeners() {
         // Listener para seleção na tabela
         tableViewPets.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    petSelecionado = newValue;
-                    preencherCampos(newValue);
-                    buttonInserir.setDisable(true);
-                    buttonRemover.setDisable(false);
-                } else {
-                    limparCampos();
-                    buttonInserir.setDisable(false);
-                    buttonRemover.setDisable(true);
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        petSelecionado = newValue;
+                        preencherCampos(newValue);
+                        buttonInserir.setDisable(true);
+                        buttonRemover.setDisable(false);
+                    } else {
+                        limparCampos();
+                        buttonInserir.setDisable(false);
+                        buttonRemover.setDisable(true);
+                    }
                 }
-            }
         );
-        
+
         // Listener para botão de inserir
         buttonInserir.setOnAction(event -> {
             limparCampos();
@@ -155,7 +155,7 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
             buttonInserir.setDisable(true);
             buttonRemover.setDisable(true);
         });
-        
+
         // Listener para botão de remover
         buttonRemover.setOnAction(event -> {
             if (petSelecionado != null) {
@@ -172,9 +172,12 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
                 }
             }
         });
-        
+
         // Listener para botão de salvar
         buttonSalvar.setOnAction(event -> {
+            if (!validarEntradaDeDados()) {
+                return;
+            }
             try {
                 Pet pet = criarPetDosCampos();
                 if (petSelecionado == null) {
@@ -202,7 +205,7 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
                 mostrarAlerta("Erro", "Erro ao salvar pet", ex.getMessage());
             }
         });
-        
+
         // Listener para botão de cancelar
         buttonCancelar.setOnAction(event -> {
             limparCampos();
@@ -211,24 +214,24 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
             buttonRemover.setDisable(true);
         });
     }
-    
+
     private void preencherCampos(Pet pet) {
         labelPetId.setText(String.valueOf(pet.getId()));
         textFieldNome.setText(pet.getNome());
         comboBoxEspecie.setValue(pet.getEspecie());
         textFieldRaca.setText(pet.getRaca());
         spinnerIdade.getValueFactory().setValue(pet.getIdade());
-        
+
         if (pet.getSexo() == SexoPetEnum.MASCULINO) {
             radioMacho.setSelected(true);
         } else {
             radioFemea.setSelected(true);
         }
-        
-        if (pet.getStatus() == StatusPetEnum.ADOTADO){
+
+        if (pet.getStatus() == StatusPetEnum.ADOTADO) {
             radioStatusPetAdotado.setSelected(true);
             setarRadioButtonAtivo(radioStatusPetAdotado);
-        } else if (pet.getStatus() == StatusPetEnum.DISPONIVEL){
+        } else if (pet.getStatus() == StatusPetEnum.DISPONIVEL) {
             radioStatusPetDisponivel.setSelected(true);
             setarRadioButtonAtivo(radioStatusPetDisponivel);
         } else {
@@ -236,7 +239,7 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
             setarRadioButtonAtivo(radioStatusPetIndisponivel);
         }
     }
-    
+
     private void setarRadioButtonAtivo(RadioButton button) {
         // Desativa os botões do Status pois não quero que permita a alteração deles
         radioStatusPetAdotado.setDisable(true);
@@ -247,7 +250,7 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
             button.setDisable(false);
         }
     }
-    
+
     private void limparCampos() {
         labelPetId.setText("");
         textFieldNome.clear();
@@ -258,28 +261,56 @@ public class FXMLAnchorPaneCadastrosPetsController implements Initializable {
         toggleGroupStatusPet.selectToggle(null);
         setarRadioButtonAtivo(null);
     }
-    
+
     private Pet criarPetDosCampos() {
         Pet pet = new Pet();
         pet.setNome(textFieldNome.getText());
         pet.setEspecie(comboBoxEspecie.getValue());
         pet.setRaca(textFieldRaca.getText());
         pet.setIdade(spinnerIdade.getValue());
-        
+
         RadioButton radioSelecionado = (RadioButton) toggleGroupSexo.getSelectedToggle();
         if (radioSelecionado != null) {
             pet.setSexo(SexoPetEnum.fromValorBanco(radioSelecionado.getUserData().toString()));
         }
-        
+
         pet.setStatus(StatusPetEnum.DISPONIVEL);
         return pet;
     }
-    
+
     private void mostrarAlerta(String titulo, String cabecalho, String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
         alert.setHeaderText(cabecalho);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    private boolean validarEntradaDeDados() {
+        String errorMessage = "";
+
+        if (textFieldNome.getText() == null || textFieldNome.getText().trim().isEmpty()) {
+            errorMessage += "Nome inválido!\n";
+        }
+        if (comboBoxEspecie.getValue() == null || comboBoxEspecie.getValue().isEmpty()) {
+            errorMessage += "Selecione uma espécie!\n";
+        }
+        if (textFieldRaca.getText() == null || textFieldRaca.getText().trim().isEmpty()) {
+            errorMessage += "Raça inválida!\n";
+        }
+        if (toggleGroupSexo.getSelectedToggle() == null) {
+            errorMessage += "Selecione o sexo do pet!\n";
+        }
+
+        if (errorMessage.isEmpty()) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro no cadastro");
+            alert.setHeaderText("Campos inválidos, por favor, corrija...");
+            alert.setContentText(errorMessage);
+            alert.show();
+            return false;
+        }
     }
 }
