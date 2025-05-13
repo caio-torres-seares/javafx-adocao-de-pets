@@ -88,6 +88,7 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     // Adicionando novas variaveis para testar os botões da tableViewPets
     private Adocao adocaoSelecionada;
     private Pet petOriginal;
+    private Pet novoPetSelecionado;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -166,14 +167,16 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
     
     @FXML
     public void handleButtonAdicionarPetTableView() {
-        Pet novoPet = tableViewPets.getSelectionModel().getSelectedItem();
+        novoPetSelecionado = tableViewPets.getSelectionModel().getSelectedItem();
 
-        if (novoPet != null) {
-            // 1. Seta pet na adocaoSelecionada
-            adocaoSelecionada.setPet(novoPet);
+        if (novoPetSelecionado != null) {
+            if (adocaoSelecionada != null) {
+                // 1. Seta pet na adocaoSelecionada
+                adocaoSelecionada.setPet(novoPetSelecionado);
+            }
             
             // 2. Atualiza tabela
-            ObservableList<Pet> novoPetList = FXCollections.observableArrayList(novoPet);
+            ObservableList<Pet> novoPetList = FXCollections.observableArrayList(novoPetSelecionado);
             tableViewPets.setItems(novoPetList);
             buttonAdicionarPetTableView.setDisable(true);
             buttonRemoverPetTableView.setDisable(false);
@@ -193,7 +196,7 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
         adocaoSelecionada = null;
         petOriginal = null;
         
-        buttonAdicionarPetTableView.setDisable(true);
+        buttonAdicionarPetTableView.setDisable(false);
         buttonRemoverPetTableView.setDisable(true);
     }
 
@@ -203,7 +206,12 @@ public class FXMLAnchorPaneCadastrosAdocoesController implements Initializable {
             connection.setAutoCommit(false);
             
             Usuario usuario = comboBoxUsuarios.getSelectionModel().getSelectedItem();
-            Pet pet = tableViewPets.getSelectionModel().getSelectedItem();
+            Pet pet;
+            if (novoPetSelecionado != null){
+                pet = novoPetSelecionado;
+            } else {
+                pet = tableViewPets.getSelectionModel().getSelectedItem();
+            }
 
             if (!validarCampos(usuario, pet)) {
                 return;
