@@ -119,6 +119,9 @@ public class FXMLAnchorPaneCadastrosUsuariosController implements Initializable 
 
         // Listener para botão de salvar
         buttonSalvar.setOnAction(event -> {
+            if (!validarEntradaDeDados()) {
+                return;
+            }
             try {
                 Usuario usuario = criarUsuarioDosCampos();
                 if (usuarioSelecionado == null) {
