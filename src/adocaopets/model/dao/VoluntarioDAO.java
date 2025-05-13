@@ -265,24 +265,22 @@ public class VoluntarioDAO {
         }
         return false;
     }
-    
- 
-        public Map<Integer, ArrayList> listarQuantidadeVoluntariosPorMes() {
+
+    public Map<Integer, ArrayList> listarQuantidadeVoluntariosPorMes() {
         String sql = "select count(id), extract(year from data_cadastro) as ano, extract(month from data_cadastro) as mes from voluntarios group by ano, mes order by ano, mes";
         Map<Integer, ArrayList> retorno = new HashMap();
-        
+
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
 
             while (resultado.next()) {
                 ArrayList linha = new ArrayList();
-                if (!retorno.containsKey(resultado.getInt("ano")))
-                {
+                if (!retorno.containsKey(resultado.getInt("ano"))) {
                     linha.add(resultado.getInt("mes"));
                     linha.add(resultado.getInt("count"));
                     retorno.put(resultado.getInt("ano"), linha);
-                }else{
+                } else {
                     ArrayList linhaNova = retorno.get(resultado.getInt("ano"));
                     linhaNova.add(resultado.getInt("mes"));
                     linhaNova.add(resultado.getInt("count"));
@@ -294,4 +292,52 @@ public class VoluntarioDAO {
         }
         return retorno;
     }
-}   
+
+    public List<Voluntario> listarPorFuncao(FuncaoVoluntario funcao) {
+        String sql = "SELECT v.*, u.nome as usuario_nome FROM voluntarios v "
+                + "JOIN usuarios u ON v.usuario_id = u.id "
+                + "JOIN voluntarios_funcoes vf ON v.id = vf.voluntario_id "
+                + "WHERE vf.funcao_id = ?";
+
+        List<Voluntario> retorno = new ArrayList<>();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, funcao.getId()); // Filtra pela função selecionada
+            ResultSet resultado = stmt.executeQuery();
+
+            while (resultado.next()) {
+                Voluntario voluntario = new Voluntario();
+                Usuario usuario = new Usuario();
+                usuario.setId(resultado.getInt("usuario_id"));
+                usuario.setNome(resultado.getString("usuario_nome"));
+
+                voluntario.setId(resultado.getInt("id"));
+                voluntario.setUsuario(usuario);
+                voluntario.setDataCadastro(resultado.getDate("data_cadastro").toLocalDate());
+                voluntario.setAtivo(resultado.getBoolean("ativo"));
+
+                // Carrega as funções do voluntário
+                String sqlFuncoes = "SELECT f.* FROM funcoes_voluntario f INNER JOIN voluntarios_funcoes vf ON f.id = vf.funcao_id WHERE vf.voluntario_id = ?;";
+                PreparedStatement stmtFuncoes = connection.prepareStatement(sqlFuncoes);
+                stmtFuncoes.setInt(1, voluntario.getId());
+                ResultSet resultadoFuncoes = stmtFuncoes.executeQuery();
+
+                List<FuncaoVoluntario> funcoes = new ArrayList<>();
+                while (resultadoFuncoes.next()) {
+                    FuncaoVoluntario f = new FuncaoVoluntario();
+                    f.setId(resultadoFuncoes.getInt("id"));
+                    f.setNome(resultadoFuncoes.getString("nome"));
+                    f.setDescricao(resultadoFuncoes.getString("descricao"));
+                    f.setLimiteVoluntarios(resultadoFuncoes.getInt("limite_voluntarios"));
+                    funcoes.add(f);
+                }
+                voluntario.setFuncoes(funcoes);
+
+                retorno.add(voluntario);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(VoluntarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
+    }
+}

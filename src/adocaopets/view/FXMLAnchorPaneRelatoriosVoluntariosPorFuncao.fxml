@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adocaopets.controller.FXMLAnchorPaneRelatoriosVoluntariosPorFuncaoController">
+   <children>
+      <TableView fx:id="tableViewVoluntarios" layoutX="131.0" layoutY="51.0" prefHeight="325.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="51.0">
+        <columns>
+          <TableColumn fx:id="tableColumnVoluntarioId" prefWidth="44.000030517578125" text="ID" />
+          <TableColumn fx:id="tableColumnVoluntarioNome" prefWidth="153.59996795654297" text="Nome do Voluntário" />
+            <TableColumn fx:id="tableColumnVoluntarioAtivo" prefWidth="73.60003662109375" text="Ativo" />
+            <TableColumn fx:id="tableColumnVoluntarioDataCadastro" prefWidth="156.0" text="Data de Cadastro" />
+            <TableColumn fx:id="tableColumnVoluntarioFuncao" prefWidth="102.39999389648438" text="Funcao" />
+            <TableColumn fx:id="tableColumnVoluntarioFuncaoDescricao" prefWidth="257.60003662109375" text="Descrição" />
+        </columns>
+      </TableView>
+      <Button fx:id="buttonImprimir" layoutX="518.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleImprimir" text="Imprimir" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+      <Label fx:id="labelFuncao" layoutX="14.0" layoutY="14.0" text="Categoria">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="comboBoxFuncoes" layoutX="89.0" layoutY="10.0" onAction="#carregarTableViewVoluntarios" prefWidth="150.0" />
+   </children>
+</AnchorPane>

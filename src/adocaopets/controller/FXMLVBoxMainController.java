@@ -97,7 +97,7 @@ public class FXMLVBoxMainController implements Initializable {
     
     @FXML
     public void handleMenuItemRelatoriosVoluntariosPorFuncao() throws IOException {
-        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource(""));
+        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/adocaopets/view/FXMLAnchorPaneRelatoriosVoluntariosPorFuncao.fxml"));
         anchorPane.getChildren().setAll(a);
     }
 
