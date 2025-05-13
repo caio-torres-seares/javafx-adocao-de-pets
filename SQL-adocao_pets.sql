@@ -78,9 +78,10 @@ INSERT INTO usuarios (nome, cpf, voluntario) VALUES
 
 -- Inserir funções de voluntário
 INSERT INTO funcoes_voluntario (nome, descricao, limite_voluntarios) VALUES 
-('Banho', 'Dar banho nos animais', 3),
-('Tosa', 'Tosar os animais', 2),
+('Banho', 'Dar banho nos animais', 4),
+('Tosa', 'Tosar os animais', 3),
 ('Passeio', 'Passear com os animais', 5);
+('Limpeza', 'Limpar o ambiente', 6);
 
 -- Inserir pets
 INSERT INTO pets (nome, especie, raca, idade, sexo, status) VALUES 
@@ -96,12 +97,17 @@ INSERT INTO pets (nome, especie, raca, idade, sexo, status) VALUES
 INSERT INTO voluntarios (usuario_id, data_cadastro, ativo) VALUES 
 (2, CURRENT_DATE, true);
 
--- Associar funções ao voluntário (Maria faz Banho e Passeio)
+-- Inserir um voluntário
+-- Regra de Negócio: um voluntário não pode ter mais de 2 funções (Maria tem 2 funções, Banho e Passeio)
 INSERT INTO voluntarios_funcoes (voluntario_id, funcao_id) VALUES 
 (1, 1), -- Banho
 (1, 3); -- Passeio
 
--- Inserir uma adoção (João adotou 5 pets)
+-- Atualizar status do usuario voluntário
+UPDATE usuarios SET status = 'true' WHERE id = 1;
+
+-- Inserir uma adoção
+-- Regra de Negócio: um usuário não pode adotar mais de 5 pets (João adotou 5 pets)
 INSERT INTO adocoes (usuario_id, pet_id, data) VALUES 
 (1, 2, CURRENT_DATE);
 (1, 3, CURRENT_DATE);
