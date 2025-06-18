@@ -34,6 +34,11 @@
                   <MenuItem fx:id="menuItemGraficosVoluntariosPorMes" mnemonicParsing="false" onAction="#handleMenuItemGraficosVoluntariosPorMes" text="Voluntários por mês" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Logs">
+               <items>
+                  <MenuItem fx:id="menuItemLogsThreadsESockets" mnemonicParsing="false" onAction="#handleMenuItemLogsThreadsESockets" text="Threads e Sockets" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <AnchorPane fx:id="anchorPane" prefHeight="510.0" prefWidth="780.0" />

@@ -8,6 +8,7 @@ package adocaopets.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -47,6 +48,9 @@ public class FXMLVBoxMainController implements Initializable {
     
     @FXML
     private AnchorPane anchorPane;
+    
+    @FXML
+    private MenuItem menuItemLogsThreadsESockets;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -98,6 +102,12 @@ public class FXMLVBoxMainController implements Initializable {
     @FXML
     public void handleMenuItemRelatoriosVoluntariosPorFuncao() throws IOException {
         AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/adocaopets/view/FXMLAnchorPaneRelatoriosVoluntariosPorFuncao.fxml"));
+        anchorPane.getChildren().setAll(a);
+    }
+
+    @FXML
+    private void handleMenuItemLogsThreadsESockets() throws IOException {
+        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/adocaopets/view/FXMLAnchorPaneLogsThreadsESockets.fxml"));
         anchorPane.getChildren().setAll(a);
     }
 
