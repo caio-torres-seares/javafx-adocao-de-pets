@@ -5,8 +5,6 @@
  */
 package adocaopets.controller;
 
-import sockets.thread.ContadorGrupo;
-import sockets.thread.LogGrupo;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,6 +16,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -28,6 +28,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sockets.thread.ContadorGrupo;
+import sockets.thread.LogGrupo;
 
 /**
  * FXML Controller class
@@ -60,7 +62,7 @@ public class FXMLAnchorPaneLogsThreadsESocketsController implements Initializabl
     
     public void initiateConnection() {
         int idGrupo = 7; // ID do grupo desejado (1-10)
-        String servidor = "34.41.27.130"; // IP do servidor
+        String servidor = "127.0.0.1"; // IP do servidor
         int porta = 12345;
         
         Platform.runLater(() -> labelGrupoAtual.setText("Grupo: " + idGrupo));

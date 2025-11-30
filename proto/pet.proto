@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pet;
+
+service PetService {
+  rpc GetMedicines (MedicineRequest) returns (MedicineResponse);
+}
+
+message MedicineRequest {
+  string condition = 1;
+}
+
+message MedicineResponse {
+  repeated string medicines = 1;
+}

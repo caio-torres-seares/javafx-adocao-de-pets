@@ -39,6 +39,11 @@
                   <MenuItem fx:id="menuItemLogsThreadsESockets" mnemonicParsing="false" onAction="#handleMenuItemLogsThreadsESockets" text="Threads e Sockets" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Grpc">
+               <items>
+                  <MenuItem fx:id="menuItemGrpcMedicamentos" mnemonicParsing="false" onAction="#handleMenuItemGrpcMedicamentos" text="Medicamentos" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <AnchorPane fx:id="anchorPane" prefHeight="510.0" prefWidth="780.0" />
