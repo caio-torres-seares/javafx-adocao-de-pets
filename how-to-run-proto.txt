@@ -1,0 +1,16 @@
+Gerar pra server python:
+
+cd proto
+python -m grpc_tools.protoc -I. --python_out=../python-server --grpc_python_out=../python-server pet.proto 
+
+
+
+Gerar para java:
+baixei:
+proto: https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.6
+proto-grpc-java: https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.63.0/protoc-gen-grpc-java-1.63.0-windows-x86_64.exe
+
+BAIXEI DEUS E O MUNDO E RODEI:
+cd proto
+
+..\protoc\bin\protoc.exe -I. --plugin=protoc-gen-grpc-java=..\protoc\bin\protoc-gen-grpc-java.exe --java_out=..\src\adocaopets\model\grpc --grpc-java_out=..\src\adocaopets\model\grpc pet.proto
