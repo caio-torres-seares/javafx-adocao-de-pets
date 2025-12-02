@@ -24,17 +24,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tpet.proto\"$\n\x0fMedicineRequest\x12\x11\n\tcondition\x18\x01 \x01(\t\"%\n\x10MedicineResponse\x12\x11\n\tmedicines\x18\x01 \x03(\t2A\n\nPetService\x12\x33\n\x0cGetMedicines\x12\x10.MedicineRequest\x1a\x11.MedicineResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tpet.proto\x12\x03pet\"$\n\x0fMedicineRequest\x12\x11\n\tcondition\x18\x01 \x01(\t\"%\n\x10MedicineResponse\x12\x11\n\tmedicines\x18\x01 \x03(\t\"\x07\n\x05\x45mpty\"\x1f\n\x0cTeamResponse\x12\x0f\n\x07members\x18\x01 \x03(\t2z\n\nPetService\x12;\n\x0cGetMedicines\x12\x14.pet.MedicineRequest\x1a\x15.pet.MedicineResponse\x12/\n\x0eGetTeamMembers\x12\n.pet.Empty\x1a\x11.pet.TeamResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'pet_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_MEDICINEREQUEST']._serialized_start=13
-  _globals['_MEDICINEREQUEST']._serialized_end=49
-  _globals['_MEDICINERESPONSE']._serialized_start=51
-  _globals['_MEDICINERESPONSE']._serialized_end=88
-  _globals['_PETSERVICE']._serialized_start=90
-  _globals['_PETSERVICE']._serialized_end=155
+  _globals['_MEDICINEREQUEST']._serialized_start=18
+  _globals['_MEDICINEREQUEST']._serialized_end=54
+  _globals['_MEDICINERESPONSE']._serialized_start=56
+  _globals['_MEDICINERESPONSE']._serialized_end=93
+  _globals['_EMPTY']._serialized_start=95
+  _globals['_EMPTY']._serialized_end=102
+  _globals['_TEAMRESPONSE']._serialized_start=104
+  _globals['_TEAMRESPONSE']._serialized_end=135
+  _globals['_PETSERVICE']._serialized_start=137
+  _globals['_PETSERVICE']._serialized_end=259
 # @@protoc_insertion_point(module_scope)

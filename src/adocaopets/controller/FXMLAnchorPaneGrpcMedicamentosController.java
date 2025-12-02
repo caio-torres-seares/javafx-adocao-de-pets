@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-
 public class FXMLAnchorPaneGrpcMedicamentosController implements Initializable {
     
     @FXML
@@ -28,20 +27,25 @@ public class FXMLAnchorPaneGrpcMedicamentosController implements Initializable {
 
     @FXML
     public void onBuscar() {
-        String condicao = textFieldCondicao.getText();
+        String condicao = textFieldCondicao.getText().trim();
+
+        if (condicao.isEmpty()) {
+            textAreaResultado.setText("Digite uma condição para buscar medicamentos.");
+            return;
+        }
 
         Thread t = new Thread(() -> {
             try {
                 List<String> medicamentos = grpcMedicamentos.consultarMedicamentos(condicao);
 
                 Platform.runLater(() -> {
-                    textAreaResultado.setText(
-                        "Medicamentos recomendados:\n" + String.join("\n", medicamentos)
-                    );
+                    textAreaResultado.setText(String.join("\n", medicamentos));
                 });
 
             } catch (Exception e) {
-                Platform.runLater(() -> textAreaResultado.setText("Erro: " + e.getMessage()));
+                Platform.runLater(() ->
+                    textAreaResultado.setText("Erro ao buscar medicamentos:\n" + e.getMessage())
+                );
             }
         });
 
@@ -52,5 +56,4 @@ public class FXMLAnchorPaneGrpcMedicamentosController implements Initializable {
     public void close() {
         grpcMedicamentos.close();
     } 
-    
 }

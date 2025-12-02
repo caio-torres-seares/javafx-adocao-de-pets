@@ -41,6 +41,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Grpc">
                <items>
+                  <MenuItem fx:id="menuItemGrpcIntegrantes" mnemonicParsing="false" onAction="#handleMenuItemGrpcIntegrantes" text="Integrantes" />
                   <MenuItem fx:id="menuItemGrpcMedicamentos" mnemonicParsing="false" onAction="#handleMenuItemGrpcMedicamentos" text="Medicamentos" />
                </items>
             </Menu>

@@ -35,9 +35,14 @@ class PetServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GetMedicines = channel.unary_unary(
-                '/PetService/GetMedicines',
+                '/pet.PetService/GetMedicines',
                 request_serializer=pet__pb2.MedicineRequest.SerializeToString,
                 response_deserializer=pet__pb2.MedicineResponse.FromString,
+                _registered_method=True)
+        self.GetTeamMembers = channel.unary_unary(
+                '/pet.PetService/GetTeamMembers',
+                request_serializer=pet__pb2.Empty.SerializeToString,
+                response_deserializer=pet__pb2.TeamResponse.FromString,
                 _registered_method=True)
 
 
@@ -45,6 +50,12 @@ class PetServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetMedicines(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetTeamMembers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -58,11 +69,16 @@ def add_PetServiceServicer_to_server(servicer, server):
                     request_deserializer=pet__pb2.MedicineRequest.FromString,
                     response_serializer=pet__pb2.MedicineResponse.SerializeToString,
             ),
+            'GetTeamMembers': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTeamMembers,
+                    request_deserializer=pet__pb2.Empty.FromString,
+                    response_serializer=pet__pb2.TeamResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'PetService', rpc_method_handlers)
+            'pet.PetService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('PetService', rpc_method_handlers)
+    server.add_registered_method_handlers('pet.PetService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -83,9 +99,36 @@ class PetService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/PetService/GetMedicines',
+            '/pet.PetService/GetMedicines',
             pet__pb2.MedicineRequest.SerializeToString,
             pet__pb2.MedicineResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetTeamMembers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/pet.PetService/GetTeamMembers',
+            pet__pb2.Empty.SerializeToString,
+            pet__pb2.TeamResponse.FromString,
             options,
             channel_credentials,
             insecure,

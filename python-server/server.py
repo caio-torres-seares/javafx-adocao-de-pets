@@ -19,6 +19,14 @@ class PetService(pet_pb2_grpc.PetServiceServicer):
         medicines = fake_db.get(condition, ["Nenhum medicamento encontrado"])
 
         return pet_pb2.MedicineResponse(medicines=medicines)
+    
+    def GetTeamMembers(self, request, context):
+        membros = [
+            "Caio Torres Seares",
+            "Gabriela Benevides Pereira Marques"
+        ]
+        return pet_pb2.TeamResponse(members=membros)
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

@@ -12,38 +12,69 @@ public final class PetServiceGrpc {
 
   private PetServiceGrpc() {}
 
-  public static final java.lang.String SERVICE_NAME = "PetService";
+  public static final java.lang.String SERVICE_NAME = "pet.PetService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<Pet.MedicineRequest,
-      Pet.MedicineResponse> getGetMedicinesMethod;
+  private static volatile io.grpc.MethodDescriptor<pet.Pet.MedicineRequest,
+      pet.Pet.MedicineResponse> getGetMedicinesMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "GetMedicines",
-      requestType = Pet.MedicineRequest.class,
-      responseType = Pet.MedicineResponse.class,
+      requestType = pet.Pet.MedicineRequest.class,
+      responseType = pet.Pet.MedicineResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<Pet.MedicineRequest,
-      Pet.MedicineResponse> getGetMedicinesMethod() {
-    io.grpc.MethodDescriptor<Pet.MedicineRequest, Pet.MedicineResponse> getGetMedicinesMethod;
+  public static io.grpc.MethodDescriptor<pet.Pet.MedicineRequest,
+      pet.Pet.MedicineResponse> getGetMedicinesMethod() {
+    io.grpc.MethodDescriptor<pet.Pet.MedicineRequest, pet.Pet.MedicineResponse> getGetMedicinesMethod;
     if ((getGetMedicinesMethod = PetServiceGrpc.getGetMedicinesMethod) == null) {
       synchronized (PetServiceGrpc.class) {
         if ((getGetMedicinesMethod = PetServiceGrpc.getGetMedicinesMethod) == null) {
           PetServiceGrpc.getGetMedicinesMethod = getGetMedicinesMethod =
-              io.grpc.MethodDescriptor.<Pet.MedicineRequest, Pet.MedicineResponse>newBuilder()
+              io.grpc.MethodDescriptor.<pet.Pet.MedicineRequest, pet.Pet.MedicineResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetMedicines"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  Pet.MedicineRequest.getDefaultInstance()))
+                  pet.Pet.MedicineRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  Pet.MedicineResponse.getDefaultInstance()))
+                  pet.Pet.MedicineResponse.getDefaultInstance()))
               .setSchemaDescriptor(new PetServiceMethodDescriptorSupplier("GetMedicines"))
               .build();
         }
       }
     }
     return getGetMedicinesMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<pet.Pet.Empty,
+      pet.Pet.TeamResponse> getGetTeamMembersMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetTeamMembers",
+      requestType = pet.Pet.Empty.class,
+      responseType = pet.Pet.TeamResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<pet.Pet.Empty,
+      pet.Pet.TeamResponse> getGetTeamMembersMethod() {
+    io.grpc.MethodDescriptor<pet.Pet.Empty, pet.Pet.TeamResponse> getGetTeamMembersMethod;
+    if ((getGetTeamMembersMethod = PetServiceGrpc.getGetTeamMembersMethod) == null) {
+      synchronized (PetServiceGrpc.class) {
+        if ((getGetTeamMembersMethod = PetServiceGrpc.getGetTeamMembersMethod) == null) {
+          PetServiceGrpc.getGetTeamMembersMethod = getGetTeamMembersMethod =
+              io.grpc.MethodDescriptor.<pet.Pet.Empty, pet.Pet.TeamResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetTeamMembers"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  pet.Pet.Empty.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  pet.Pet.TeamResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new PetServiceMethodDescriptorSupplier("GetTeamMembers"))
+              .build();
+        }
+      }
+    }
+    return getGetTeamMembersMethod;
   }
 
   /**
@@ -96,9 +127,16 @@ public final class PetServiceGrpc {
 
     /**
      */
-    default void getMedicines(Pet.MedicineRequest request,
-        io.grpc.stub.StreamObserver<Pet.MedicineResponse> responseObserver) {
+    default void getMedicines(pet.Pet.MedicineRequest request,
+        io.grpc.stub.StreamObserver<pet.Pet.MedicineResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetMedicinesMethod(), responseObserver);
+    }
+
+    /**
+     */
+    default void getTeamMembers(pet.Pet.Empty request,
+        io.grpc.stub.StreamObserver<pet.Pet.TeamResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetTeamMembersMethod(), responseObserver);
     }
   }
 
@@ -131,10 +169,18 @@ public final class PetServiceGrpc {
 
     /**
      */
-    public void getMedicines(Pet.MedicineRequest request,
-        io.grpc.stub.StreamObserver<Pet.MedicineResponse> responseObserver) {
+    public void getMedicines(pet.Pet.MedicineRequest request,
+        io.grpc.stub.StreamObserver<pet.Pet.MedicineResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetMedicinesMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void getTeamMembers(pet.Pet.Empty request,
+        io.grpc.stub.StreamObserver<pet.Pet.TeamResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetTeamMembersMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -156,9 +202,16 @@ public final class PetServiceGrpc {
 
     /**
      */
-    public Pet.MedicineResponse getMedicines(Pet.MedicineRequest request) {
+    public pet.Pet.MedicineResponse getMedicines(pet.Pet.MedicineRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetMedicinesMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public pet.Pet.TeamResponse getTeamMembers(pet.Pet.Empty request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetTeamMembersMethod(), getCallOptions(), request);
     }
   }
 
@@ -180,14 +233,23 @@ public final class PetServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<Pet.MedicineResponse> getMedicines(
-        Pet.MedicineRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<pet.Pet.MedicineResponse> getMedicines(
+        pet.Pet.MedicineRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetMedicinesMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<pet.Pet.TeamResponse> getTeamMembers(
+        pet.Pet.Empty request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetTeamMembersMethod(), getCallOptions()), request);
     }
   }
 
   private static final int METHODID_GET_MEDICINES = 0;
+  private static final int METHODID_GET_TEAM_MEMBERS = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -207,8 +269,12 @@ public final class PetServiceGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_GET_MEDICINES:
-          serviceImpl.getMedicines((Pet.MedicineRequest) request,
-              (io.grpc.stub.StreamObserver<Pet.MedicineResponse>) responseObserver);
+          serviceImpl.getMedicines((pet.Pet.MedicineRequest) request,
+              (io.grpc.stub.StreamObserver<pet.Pet.MedicineResponse>) responseObserver);
+          break;
+        case METHODID_GET_TEAM_MEMBERS:
+          serviceImpl.getTeamMembers((pet.Pet.Empty) request,
+              (io.grpc.stub.StreamObserver<pet.Pet.TeamResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -232,9 +298,16 @@ public final class PetServiceGrpc {
           getGetMedicinesMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
-              Pet.MedicineRequest,
-              Pet.MedicineResponse>(
+              pet.Pet.MedicineRequest,
+              pet.Pet.MedicineResponse>(
                 service, METHODID_GET_MEDICINES)))
+        .addMethod(
+          getGetTeamMembersMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              pet.Pet.Empty,
+              pet.Pet.TeamResponse>(
+                service, METHODID_GET_TEAM_MEMBERS)))
         .build();
   }
 
@@ -244,7 +317,7 @@ public final class PetServiceGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return Pet.getDescriptor();
+      return pet.Pet.getDescriptor();
     }
 
     @java.lang.Override
@@ -284,6 +357,7 @@ public final class PetServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PetServiceFileDescriptorSupplier())
               .addMethod(getGetMedicinesMethod())
+              .addMethod(getGetTeamMembersMethod())
               .build();
         }
       }

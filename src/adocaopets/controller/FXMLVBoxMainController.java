@@ -53,6 +53,8 @@ public class FXMLVBoxMainController implements Initializable {
     private MenuItem menuItemLogsThreadsESockets;
     @FXML
     private MenuItem menuItemGrpcMedicamentos;
+    @FXML
+    private MenuItem menuItemGrpcIntegrantes;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -116,6 +118,12 @@ public class FXMLVBoxMainController implements Initializable {
     @FXML
     private void handleMenuItemGrpcMedicamentos() throws IOException {
         AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/adocaopets/view/FXMLAnchorPaneGrpcMedicamentos.fxml"));
+        anchorPane.getChildren().setAll(a);
+    }
+
+    @FXML
+    private void handleMenuItemGrpcIntegrantes() throws IOException {
+        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/adocaopets/view/FXMLAnchorPaneGrpcGetTeamMembers.fxml"));
         anchorPane.getChildren().setAll(a);
     }
 }

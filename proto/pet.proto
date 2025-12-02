@@ -4,6 +4,7 @@ package pet;
 
 service PetService {
   rpc GetMedicines (MedicineRequest) returns (MedicineResponse);
+  rpc GetTeamMembers (Empty) returns (TeamResponse);
 }
 
 message MedicineRequest {
@@ -12,4 +13,10 @@ message MedicineRequest {
 
 message MedicineResponse {
   repeated string medicines = 1;
+}
+
+message Empty {}
+
+message TeamResponse {
+  repeated string members = 1;
 }
