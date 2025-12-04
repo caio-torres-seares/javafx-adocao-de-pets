@@ -1,6 +1,6 @@
 package adocaopets.controller;
 
-import adocaopets.model.grpc.GrpcMedicamentos;
+import adocaopets.model.grpc.GrpcService;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -14,11 +14,11 @@ public class FXMLAnchorPaneGrpcGetTeamMembersController implements Initializable
     @FXML
     private TextArea textAreaTeam;
 
-    private GrpcMedicamentos grpc;
+    private GrpcService grpc;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        grpc = new GrpcMedicamentos();
+        grpc = new GrpcService();
     }    
 
     @FXML

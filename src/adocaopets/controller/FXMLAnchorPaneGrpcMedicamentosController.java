@@ -1,6 +1,6 @@
 package adocaopets.controller;
 
-import adocaopets.model.grpc.GrpcMedicamentos;
+import adocaopets.model.grpc.GrpcService;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,11 +18,11 @@ public class FXMLAnchorPaneGrpcMedicamentosController implements Initializable {
     @FXML
     private TextArea textAreaResultado;
 
-    private GrpcMedicamentos grpcMedicamentos;
+    private GrpcService grpcService;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        grpcMedicamentos = new GrpcMedicamentos();
+        grpcService = new GrpcService();
     }
 
     @FXML
@@ -36,7 +36,7 @@ public class FXMLAnchorPaneGrpcMedicamentosController implements Initializable {
 
         Thread t = new Thread(() -> {
             try {
-                List<String> medicamentos = grpcMedicamentos.consultarMedicamentos(condicao);
+                List<String> medicamentos = grpcService.consultarMedicamentos(condicao);
 
                 Platform.runLater(() -> {
                     textAreaResultado.setText(String.join("\n", medicamentos));
@@ -54,6 +54,6 @@ public class FXMLAnchorPaneGrpcMedicamentosController implements Initializable {
     }
 
     public void close() {
-        grpcMedicamentos.close();
+        grpcService.close();
     } 
 }

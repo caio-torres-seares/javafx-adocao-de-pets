@@ -10,12 +10,12 @@ import pet.Pet.MedicineResponse;
 import pet.Pet.TeamResponse;
 import pet.PetServiceGrpc;
 
-public class GrpcMedicamentos {
+public class GrpcService {
 
     private final PetServiceGrpc.PetServiceBlockingStub stub;
     private final ManagedChannel channel;
 
-    public GrpcMedicamentos() {
+    public GrpcService() {
         // Abre conexão com servidor gRPC
         channel = ManagedChannelBuilder
                 .forAddress("localhost", 50051)
